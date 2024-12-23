@@ -1,17 +1,14 @@
 package com.example.list_4pm2_2425.app_view_models
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
-import com.example.list_4pm2_2425.data.Faculty
-import com.example.list_4pm2_2425.data.ListOfFaculty
+import com.example.list_4pm2_2425.data.CarModel
 import com.example.list_4pm2_2425.repository.AppRepository
 
-class FacultyViewModel : ViewModel() {
-    var facultyList: LiveData<List<Faculty>> = AppRepository.getInstance().listOfFaculty
+class CarModelViewModel : ViewModel() {
+    var facultyList: LiveData<List<CarModel>> = AppRepository.getInstance().listOfFaculty
 
-    private var _faculty: Faculty? = null
+    private var _faculty: CarModel? = null
 
     val faculty
         get()=_faculty
@@ -34,7 +31,7 @@ class FacultyViewModel : ViewModel() {
     }
 
     fun appendFaculty(facultyName: String){
-        val faculty=Faculty()
+        val faculty=CarModel()
         faculty.name=facultyName
         AppRepository.getInstance().updateFaculty(faculty)
     }
@@ -46,7 +43,7 @@ class FacultyViewModel : ViewModel() {
         }
     }
 
-    fun setCurrentFaculty(faculty: Faculty){
+    fun setCurrentFaculty(faculty: CarModel){
         AppRepository.getInstance().setCurrentFaculty(faculty)
     }
 }

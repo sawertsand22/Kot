@@ -17,9 +17,12 @@ data class Student(
     @SerializedName("last_name") var lastName: String = "",
     @SerializedName("first_name") var firstName: String = "",
     @SerializedName("middle_name") var middleName: String = "",
-    @SerializedName("birth_date") @ColumnInfo(name = "birth_date") var birthDate: Date = Date(),
+    @SerializedName("VIN") var VIN: String = "",
+    @SerializedName("quantity") var quantity: String = "",
+    @SerializedName("count_part") var count_part: String = "",
+    @SerializedName("production_date") @ColumnInfo(name = "production_date_date") var birthDate: Date = Date(),
     @SerializedName("group_id") @ColumnInfo(name = "group_id") var groupID: UUID?= null,
-    var phone: String="",
+    //var phone: String="",
     var sex : Int=0
 ){
     val shortName

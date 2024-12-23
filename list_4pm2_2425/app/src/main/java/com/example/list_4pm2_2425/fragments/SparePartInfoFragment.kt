@@ -1,7 +1,6 @@
 package com.example.list_4pm2_2425.fragments
 
 import android.annotation.SuppressLint
-import androidx.fragment.app.viewModels
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -12,7 +11,6 @@ import android.widget.ArrayAdapter
 import com.example.list_4pm2_2425.R
 import com.example.list_4pm2_2425.data.Student
 import com.example.list_4pm2_2425.databinding.FragmentStudentInfoBinding
-import com.example.list_4pm2_2425.databinding.FragmentStudentsBinding
 import com.example.list_4pm2_2425.repository.AppRepository
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -20,7 +18,7 @@ import java.text.SimpleDateFormat
 
 private const val ARG_PARAM1 = "student_param"
 
-class StudentInfoFragment : Fragment() {
+class SparePartInfoFragment : Fragment() {
     private lateinit var student: Student
     private lateinit var _binding: FragmentStudentInfoBinding
     val binding
@@ -42,7 +40,7 @@ class StudentInfoFragment : Fragment() {
 
     companion object {
         fun newInstance(student: Student) =
-            StudentInfoFragment().apply {
+            SparePartInfoFragment().apply {
                 arguments = Bundle().apply {
                     putString(ARG_PARAM1, Gson().toJson(student))
                 }
@@ -72,15 +70,15 @@ class StudentInfoFragment : Fragment() {
                 // write code
             }
         }
-        binding.cwBirthDate.setOnDateChangeListener {view, year, month, dayOfMonth ->
+        binding.cwProductionDate.setOnDateChangeListener {view, year, month, dayOfMonth ->
             student.birthDate.time =
                 SimpleDateFormat("yyyy.MM.dd").parse("$year.$month.$dayOfMonth")?.time ?: student.birthDate.time
         }
         binding.etFirstName.setText(student.firstName)
         binding.etLastName.setText(student.lastName)
+        binding.etVIN.setText(student.VIN)
         binding.etMiddleName.setText(student.middleName)
-        binding.etPhone.setText(student.phone)
-        binding.cwBirthDate.date = student.birthDate.time
+        binding.cwProductionDate.date = student.birthDate.time
         binding.btnCancel.setOnClickListener {
             requireActivity().onBackPressedDispatcher.onBackPressed()
         }
@@ -88,7 +86,7 @@ class StudentInfoFragment : Fragment() {
             student.lastName = binding.etLastName.text.toString()
             student.firstName = binding.etFirstName.text.toString()
             student.middleName = binding.etMiddleName.text.toString()
-            student.phone = binding.etPhone.text.toString()
+            student.VIN = binding.etVIN.text.toString()
             AppRepository.getInstance().updateStudent(student)
             requireActivity().onBackPressedDispatcher.onBackPressed()
         }

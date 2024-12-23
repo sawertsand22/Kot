@@ -1,13 +1,12 @@
 package com.example.list_4pm2_2425.app_view_models
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.list_4pm2_2425.data.Group
 import com.example.list_4pm2_2425.data.Student
 import com.example.list_4pm2_2425.repository.AppRepository
 
-class StudentsViewModel : ViewModel() {
+class SparePartsViewModel : ViewModel() {
     var studentList: MutableLiveData<List<Student>> = MutableLiveData()
     private var _student: Student? = null
     val student

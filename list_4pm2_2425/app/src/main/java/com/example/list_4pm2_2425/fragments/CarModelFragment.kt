@@ -2,7 +2,6 @@ package com.example.list_4pm2_2425.fragments
 
 import android.app.AlertDialog
 import android.content.Context
-import androidx.fragment.app.viewModels
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -18,25 +17,25 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.list_4pm2_2425.MainActivity
 import com.example.list_4pm2_2425.R
-import com.example.list_4pm2_2425.app_view_models.FacultyViewModel
-import com.example.list_4pm2_2425.data.Faculty
+import com.example.list_4pm2_2425.app_view_models.CarModelViewModel
+import com.example.list_4pm2_2425.data.CarModel
 import com.example.list_4pm2_2425.data.NamesOfFragment
-import com.example.list_4pm2_2425.databinding.FragmentFacultyBinding
+import com.example.list_4pm2_2425.databinding.FragmentCarmodelBinding
 import com.example.list_4pm2_2425.interfaces.ActivityCallbacks
 
-class FacultyFragment : Fragment(), MainActivity.Edit {
+class CarModelFragment : Fragment(), MainActivity.Edit {
 
     companion object {
         //fun newInstance() = FacultyFragment()
-        private var INSTANCE: FacultyFragment? = null
-        fun getInstance(): FacultyFragment {
-            if (INSTANCE == null) INSTANCE = FacultyFragment()
-            return INSTANCE ?: throw Exception("FacultyFragment не создан")
+        private var INSTANCE: CarModelFragment? = null
+        fun getInstance(): CarModelFragment {
+            if (INSTANCE == null) INSTANCE = CarModelFragment()
+            return INSTANCE ?: throw Exception("CarModelFragment не создан")
         }
     }
 
-    private lateinit var viewModel: FacultyViewModel
-    private lateinit var _binding: FragmentFacultyBinding
+    private lateinit var viewModel: CarModelViewModel
+    private lateinit var _binding: FragmentCarmodelBinding
     val binding
         get()=_binding
 
@@ -48,29 +47,29 @@ class FacultyFragment : Fragment(), MainActivity.Edit {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentFacultyBinding.inflate(inflater, container, false)
-        binding.rvFaculty.layoutManager=
+        _binding = FragmentCarmodelBinding.inflate(inflater, container, false)
+        binding.rvCarModel.layoutManager=
             LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(this).get(FacultyViewModel::class.java)
-        activityCallbacks?.newTitle("Список факультетов")
+        viewModel = ViewModelProvider(this).get(CarModelViewModel::class.java)
+        activityCallbacks?.newTitle("Список моделей авто")
         viewModel.facultyList.observe(viewLifecycleOwner){
-            binding.rvFaculty.adapter=FacultyAdapter(it?:emptyList())
+            binding.rvCarModel.adapter=FacultyAdapter(it?:emptyList())
         }
     }
 
-    private inner class FacultyAdapter(private val items: List<Faculty>)
+    private inner class FacultyAdapter(private val items: List<CarModel>)
         : RecyclerView.Adapter<FacultyAdapter.ItemHolder>() {
 
         override fun onCreateViewHolder(
             parent: ViewGroup,
             viewType: Int
         ): FacultyAdapter.ItemHolder{
-            val view = layoutInflater.inflate(R.layout.element_faculty_list, parent, false)
+            val view = layoutInflater.inflate(R.layout.element_carmodel_list, parent, false)
             return ItemHolder(view)
         }
         override fun getItemCount(): Int = items.size
@@ -80,16 +79,16 @@ class FacultyFragment : Fragment(), MainActivity.Edit {
 
         private var lastView: View? = null
         private fun updateCurrentView(view: View){
-            lastView?.findViewById<ConstraintLayout>(R.id.clFaculty)?.setBackgroundColor(
+            lastView?.findViewById<ConstraintLayout>(R.id.clCarModel)?.setBackgroundColor(
                 ContextCompat.getColor(requireContext(), R.color.white)
             )
-            lastView?.findViewById<TextView>(R.id.tvFaculty)?.setTextColor(
+            lastView?.findViewById<TextView>(R.id.tvCarModel)?.setTextColor(
                 ContextCompat.getColor(requireContext(), R.color.black)
             )
-            view.findViewById<ConstraintLayout>(R.id.clFaculty)?.setBackgroundColor(
+            view.findViewById<ConstraintLayout>(R.id.clCarModel)?.setBackgroundColor(
                 ContextCompat.getColor(requireContext(), R.color.myBlue)
             )
-            view.findViewById<TextView>(R.id.tvFaculty)?.setTextColor(
+            view.findViewById<TextView>(R.id.tvCarModel)?.setTextColor(
                 ContextCompat.getColor(requireContext(), R.color.white)
             )
             lastView=view
@@ -97,11 +96,11 @@ class FacultyFragment : Fragment(), MainActivity.Edit {
 
         private inner class ItemHolder(view: View)
             : RecyclerView.ViewHolder(view) {
-                private lateinit var faculty : Faculty
+                private lateinit var faculty : CarModel
 
-                fun bind(faculty : Faculty) {
+                fun bind(faculty : CarModel) {
                     this.faculty=faculty
-                    val tv = itemView.findViewById<TextView>(R.id.tvFaculty)
+                    val tv = itemView.findViewById<TextView>(R.id.tvCarModel)
                     tv.text=faculty.name
 
 
@@ -110,7 +109,7 @@ class FacultyFragment : Fragment(), MainActivity.Edit {
                         updateCurrentView(itemView)
                     }
 
-                    val icl=itemView.findViewById<ConstraintLayout>(R.id.clFaculty)
+                    val icl=itemView.findViewById<ConstraintLayout>(R.id.clCarModel)
                     icl.setOnClickListener(cl)
                     icl.setBackgroundColor(
                         ContextCompat.getColor(requireContext(), R.color.white))
@@ -143,7 +142,7 @@ class FacultyFragment : Fragment(), MainActivity.Edit {
     private fun deleteDialog(){
         AlertDialog.Builder(requireContext())
             .setTitle("Удаление!")
-            .setMessage("Вы действительно хотите удалить факультет ${viewModel.faculty?.name ?: ""}?")
+            .setMessage("Вы действительно хотите удалить модель авто ${viewModel.faculty?.name ?: ""}?")
             .setPositiveButton("ДА") {_, _ ->
                 viewModel.deleteFaculty()
             }
@@ -158,7 +157,7 @@ class FacultyFragment : Fragment(), MainActivity.Edit {
         val messageText = mDialogView.findViewById<TextView>(R.id.tvInfo)
         val inputString = mDialogView.findViewById<EditText>(R.id.etString)
         inputString.setText(facultyName)
-        messageText.text="Укажите наименование факультета"
+        messageText.text="Укажите модель автомобиля"
 
         AlertDialog.Builder(requireContext())
             .setTitle("ИЗМЕНЕНИЕ ДАННЫХ")

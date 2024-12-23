@@ -4,7 +4,8 @@
     <string name="preference_key_group_list">group_list</string>
     <string name="preference_key_student_list">student_list</string>
     <string-array name="SEX">
-        <item>Женский</item>
-        <item>Мужской</item>
+        <item>Отлично</item>
+        <item>Нормально</item>
+        <item>Ужасно</item>
     </string-array>
 </resources>

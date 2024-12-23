@@ -12,14 +12,14 @@
         android:id="@+id/miDeleteGroup"
         android:title="Удалить группу" />
     <item
-        android:id="@+id/miNewFaculty"
+        android:id="@+id/miNewCarModel"
         android:icon="@android:drawable/btn_star_big_on"
-        android:title="Добавить факультет"
+        android:title="Добавить модель автомобиля"
         app:showAsAction="always" />
     <item
-        android:id="@+id/miUpdateFaculty"
-        android:title="Изменить факультет" />
+        android:id="@+id/miUpdateCarModel"
+        android:title="Изменить модель автомобиля" />
     <item
-        android:id="@+id/miDeleteFaculty"
-        android:title="Удалить факультет" />
+        android:id="@+id/miDeleteCarModel"
+        android:title="Удалить модель автомобиля" />
 </menu>

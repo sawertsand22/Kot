@@ -5,5 +5,5 @@ object MyConsts {
 }
 
 enum class NamesOfFragment {
-    FACULTY, GROUP, STUDENT
+    CARMODEL, GROUP, SPAREPART
 }

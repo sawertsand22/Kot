@@ -2,7 +2,6 @@ package com.example.list_4pm2_2425.fragments
 
 import android.Manifest
 import android.app.AlertDialog
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -21,30 +20,30 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.list_4pm2_2425.R
-import com.example.list_4pm2_2425.app_view_models.StudentsViewModel
+import com.example.list_4pm2_2425.app_view_models.SparePartsViewModel
 import com.example.list_4pm2_2425.data.Group
 import com.example.list_4pm2_2425.data.NamesOfFragment
 import com.example.list_4pm2_2425.data.Student
-import com.example.list_4pm2_2425.databinding.FragmentStudentsBinding
+import com.example.list_4pm2_2425.databinding.FragmentSparepartsBinding
 import com.example.list_4pm2_2425.interfaces.ActivityCallbacks
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class StudentsFragment : Fragment() {
+class SparePartsFragment : Fragment() {
 
     companion object {
         private lateinit var group: Group
-        fun newInstance(group: Group): StudentsFragment{
+        fun newInstance(group: Group): SparePartsFragment{
             this.group=group
-            return StudentsFragment()
+            return SparePartsFragment()
         }
     }
 
-    private lateinit var viewModel: StudentsViewModel
+    private lateinit var viewModel: SparePartsViewModel
 
-    private lateinit var _binding: FragmentStudentsBinding
+    private lateinit var _binding: FragmentSparepartsBinding
     val binding
         get()=_binding
 
@@ -58,8 +57,8 @@ class StudentsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentStudentsBinding.inflate(inflater, container, false)
-        binding.rvStudents.layoutManager =
+        _binding = FragmentSparepartsBinding.inflate(inflater, container, false)
+        binding.rvSpareParts.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         return binding.root
         //return inflater.inflate(R.layout.fragment_students, container, false)
@@ -67,12 +66,12 @@ class StudentsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(this).get(StudentsViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(SparePartsViewModel::class.java)
         viewModel.set_Group(group)
         viewModel.studentList.observe(viewLifecycleOwner){
-            binding.rvStudents.adapter=StudentAdapter(it)
+            binding.rvSpareParts.adapter=StudentAdapter(it)
         }
-        binding.fabAppendStudent.setOnClickListener {
+        binding.fabAppendSparePart.setOnClickListener {
             editStudent(Student().apply { groupID = viewModel.group.id })
         }
     }
@@ -80,7 +79,7 @@ class StudentsFragment : Fragment() {
     private fun deleteDialog(){
         AlertDialog.Builder(requireContext())
             .setTitle("Удаление")
-            .setMessage("Вы действительно хотите удалить стужента ${viewModel.student?.shortName ?: ""}?")
+            .setMessage("Вы действительно хотите удалить запчасть ${viewModel.student?.shortName ?: ""}?")
             .setPositiveButton("Да"){_, _ ->
                 viewModel.deleteStudent()
             }
@@ -91,7 +90,7 @@ class StudentsFragment : Fragment() {
     }
 
     private fun editStudent(student: Student){
-        (requireActivity() as ActivityCallbacks).showFragment(NamesOfFragment.STUDENT, student)
+        (requireActivity() as ActivityCallbacks).showFragment(NamesOfFragment.SPAREPART, student)
         (requireActivity() as ActivityCallbacks).newTitle("Группа ${viewModel.group.name}")
     }
 
@@ -101,7 +100,7 @@ class StudentsFragment : Fragment() {
             parent: ViewGroup,
             viewType: Int
         ): StudentAdapter.ItemHolder {
-            val view = layoutInflater.inflate(R.layout.element_student_list, parent, false)
+            val view = layoutInflater.inflate(R.layout.element_sparepart_list, parent, false)
             return ItemHolder(view)
         }
 
@@ -111,7 +110,7 @@ class StudentsFragment : Fragment() {
         }
         private var lastView : View? = null
         private fun updateCurrentView(view: View){
-            val ll = lastView?.findViewById<LinearLayout>(R.id.llStudentButtons)
+            val ll = lastView?.findViewById<LinearLayout>(R.id.llSparePartButtons)
             ll?.visibility = View.INVISIBLE
             ll?.layoutParams=ll?.layoutParams.apply { this?.width=1 }
             val ib = lastView?.findViewById<ImageButton>(R.id.ibCall)
@@ -124,7 +123,7 @@ class StudentsFragment : Fragment() {
             view.findViewById<ConstraintLayout>(R.id.clStudent).setBackgroundColor(
                 ContextCompat.getColor(requireContext(), R.color.myBlue)
             )
-            view.findViewById<TextView>(R.id.tvStudentName).setTextColor(
+            view.findViewById<TextView>(R.id.tvSparePartName).setTextColor(
                 ContextCompat.getColor(requireContext(), R.color.white)
             )
             lastView = view
@@ -138,7 +137,7 @@ class StudentsFragment : Fragment() {
                 this.student=student
                 if(student==viewModel.student)
                     updateCurrentView(itemView)
-                val tv = itemView.findViewById<TextView>(R.id.tvStudentName)
+                val tv = itemView.findViewById<TextView>(R.id.tvSparePartName)
                 tv.text =student.longName
                 val cl = itemView.findViewById<ConstraintLayout>(R.id.clStudent)
                 cl.setOnClickListener {
@@ -146,15 +145,15 @@ class StudentsFragment : Fragment() {
                     viewModel.setCurrentStudent(student)
                     updateCurrentView(itemView)
                 }
-                itemView.findViewById<ImageButton>(R.id.ibEditStudent).setOnClickListener {
+                itemView.findViewById<ImageButton>(R.id.ibEditSparePart).setOnClickListener {
                     editStudent(student)
                 }
 
-                itemView.findViewById<ImageButton>(R.id.ibDeleteStudent).setOnClickListener {
+                itemView.findViewById<ImageButton>(R.id.ibDeleteSparePart).setOnClickListener {
                     deleteDialog()
                 }
 
-                val llb = itemView.findViewById<LinearLayout>(R.id.llStudentButtons)
+                val llb = itemView.findViewById<LinearLayout>(R.id.llSparePartButtons)
                 llb.visibility = View.INVISIBLE
                 llb?.layoutParams=llb?.layoutParams.apply { this?.width=1 }
                 val ib = itemView.findViewById<ImageButton>(R.id.ibCall)
@@ -162,7 +161,7 @@ class StudentsFragment : Fragment() {
                 cl.setOnLongClickListener {
                     cl.callOnClick()
                     llb.visibility=View.VISIBLE
-                    if(student.phone?.isNotBlank() == true)
+                    if(student.VIN?.isNotBlank() == true)
                         ib.visibility = View.VISIBLE
                     MainScope()
                         .launch {
@@ -185,7 +184,7 @@ class StudentsFragment : Fragment() {
                 itemView.findViewById<ImageButton>(R.id.ibCall).setOnClickListener {
                     if(ContextCompat.checkSelfPermission(requireContext(),
                             Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED){
-                        val intent = Intent(Intent.ACTION_CALL, Uri.parse("tel:${student.phone}"))
+                        val intent = Intent(Intent.ACTION_CALL, Uri.parse("tel:${student.VIN}"))
                         startActivity(intent)
                     } else {
                         ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.CALL_PHONE), 2)

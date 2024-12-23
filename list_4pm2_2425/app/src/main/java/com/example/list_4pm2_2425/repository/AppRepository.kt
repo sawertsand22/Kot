@@ -7,7 +7,7 @@ import androidx.lifecycle.asLiveData
 import androidx.preference.PreferenceManager
 import com.example.list_4pm2_2425.ListApp4PM_1_2425
 import com.example.list_4pm2_2425.R
-import com.example.list_4pm2_2425.data.Faculty
+import com.example.list_4pm2_2425.data.CarModel
 import com.example.list_4pm2_2425.data.Group
 import com.example.list_4pm2_2425.data.ListOfFaculty
 import com.example.list_4pm2_2425.data.ListOfGroup
@@ -36,7 +36,7 @@ class AppRepository {
     }
 
    // var listOfFaculty: MutableLiveData<ListOfFaculty?> = MutableLiveData()
-    var faculty: MutableLiveData<Faculty> = MutableLiveData()
+    var faculty: MutableLiveData<CarModel> = MutableLiveData()
     //var listOfGroup: MutableLiveData<ListOfGroup> = MutableLiveData()
     var group: MutableLiveData<Group> = MutableLiveData()
     //var listOfStudent: MutableLiveData<ListOfStudent> = MutableLiveData()
@@ -68,10 +68,10 @@ class AppRepository {
 //        setCurrentFaculty(0)
 //    }
 
-    fun getFacultyPosition(faculty: Faculty): Int = listOfFaculty.value?.indexOfFirst{
+    fun getFacultyPosition(faculty: CarModel): Int = listOfFaculty.value?.indexOfFirst{
         it.id==faculty.id } ?:-1
 
-    fun getFaculltyPosition()=getFacultyPosition(faculty.value?: Faculty())
+    fun getFaculltyPosition()=getFacultyPosition(faculty.value?: CarModel())
 
     fun setCurrentFaculty(position: Int){
         if(listOfFaculty.value==null || position<0 ||
@@ -80,7 +80,7 @@ class AppRepository {
         setCurrentFaculty(listOfFaculty.value!![position])
     }
 
-    fun setCurrentFaculty(_faculty: Faculty){
+    fun setCurrentFaculty(_faculty: CarModel){
         faculty.postValue(_faculty)
     }
 
@@ -234,21 +234,21 @@ class AppRepository {
         myCoroutineScope.cancel()
     }
 
-    val listOfFaculty : LiveData<List<Faculty>> = listDB.getFaculty()
+    val listOfFaculty : LiveData<List<CarModel>> = listDB.getFaculty()
         .asLiveData()
 
-    fun addFaculty(faculty: Faculty){
+    fun addFaculty(faculty: CarModel){
         myCoroutineScope.launch {
             listDB.insertFaculty(faculty)
             setCurrentFaculty(faculty)
         }
     }
 
-    fun updateFaculty(faculty: Faculty){
+    fun updateFaculty(faculty: CarModel){
         addFaculty(faculty)
     }
 
-    fun deleteFaculty(faculty: Faculty){
+    fun deleteFaculty(faculty: CarModel){
         myCoroutineScope.launch {
             listDB.deleteFaculty(faculty)
             setCurrentFaculty(0)

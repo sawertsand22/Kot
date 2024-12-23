@@ -1,6 +1,6 @@
 package com.example.list_4pm2_2425.repository
 
-import com.example.list_4pm2_2425.data.Faculty
+import com.example.list_4pm2_2425.data.CarModel
 import com.example.list_4pm2_2425.data.Group
 import com.example.list_4pm2_2425.data.Student
 import com.example.list_4pm2_2425.database.ListDAO
@@ -9,11 +9,11 @@ import java.util.UUID
 
 interface DBRepository{
 
-    fun getFaculty(): Flow<List<Faculty>>
-    suspend fun insertFaculty(faculty: Faculty)
-    suspend fun updateFaculty(faculty: Faculty)
-    suspend fun insertAllFaculty(facultyList: List<Faculty>)
-    suspend fun deleteFaculty(faculty: Faculty)
+    fun getFaculty(): Flow<List<CarModel>>
+    suspend fun insertFaculty(faculty: CarModel)
+    suspend fun updateFaculty(faculty: CarModel)
+    suspend fun insertAllFaculty(facultyList: List<CarModel>)
+    suspend fun deleteFaculty(faculty: CarModel)
     suspend fun deleteAllFaculties()
 
 

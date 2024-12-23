@@ -1,6 +1,5 @@
 package com.example.list_4pm2_2425
 
-import android.content.Context
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -12,12 +11,10 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.list_4pm2_2425.data.NamesOfFragment
 import com.example.list_4pm2_2425.data.Student
-import com.example.list_4pm2_2425.fragments.FacultyFragment
+import com.example.list_4pm2_2425.fragments.CarModelFragment
 import com.example.list_4pm2_2425.fragments.GroupFragment
-import com.example.list_4pm2_2425.fragments.StudentInfoFragment
-import com.example.list_4pm2_2425.fragments.StudentsFragment
+import com.example.list_4pm2_2425.fragments.SparePartInfoFragment
 import com.example.list_4pm2_2425.interfaces.ActivityCallbacks
-import com.example.list_4pm2_2425.repository.AppRepository
 import com.example.list_4pm2_2425.app_view_models.GroupViewModel
 
 class MainActivity : AppCompatActivity(), ActivityCallbacks {
@@ -37,18 +34,18 @@ class MainActivity : AppCompatActivity(), ActivityCallbacks {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        showFragment(NamesOfFragment.FACULTY)
+        showFragment(NamesOfFragment.CARMODEL)
 
         onBackPressedDispatcher.addCallback(this) {
             if (supportFragmentManager.backStackEntryCount > 0) {
 
                 supportFragmentManager.popBackStack()
                 when (activeFragment){
-                    NamesOfFragment.FACULTY ->{
+                    NamesOfFragment.CARMODEL ->{
                         finish()
                     }
                     NamesOfFragment.GROUP ->{
-                        activeFragment=NamesOfFragment.FACULTY
+                        activeFragment=NamesOfFragment.CARMODEL
                     }
                     else -> {
                         activeFragment=NamesOfFragment.GROUP
@@ -61,7 +58,7 @@ class MainActivity : AppCompatActivity(), ActivityCallbacks {
             }
         }
     }
-    var activeFragment: NamesOfFragment = NamesOfFragment.FACULTY
+    var activeFragment: NamesOfFragment = NamesOfFragment.CARMODEL
 
     private var _miAppendFaculty: MenuItem? = null
     private var _miUpdateFaculty: MenuItem? = null
@@ -74,9 +71,9 @@ class MainActivity : AppCompatActivity(), ActivityCallbacks {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.main_menu, menu)
-        _miAppendFaculty = menu?.findItem(R.id.miNewFaculty)
-        _miUpdateFaculty = menu?.findItem(R.id.miUpdateFaculty)
-        _miDeleteFaculty = menu?.findItem(R.id.miDeleteFaculty)
+        _miAppendFaculty = menu?.findItem(R.id.miNewCarModel)
+        _miUpdateFaculty = menu?.findItem(R.id.miUpdateCarModel)
+        _miDeleteFaculty = menu?.findItem(R.id.miDeleteCarModel)
         _miAppendGroup = menu?.findItem(R.id.miNewGroup)
         _miUpdateGroup = menu?.findItem(R.id.miUpdateGroup)
         _miDeleteGroup = menu?.findItem(R.id.miDeleteGroup)
@@ -85,9 +82,9 @@ class MainActivity : AppCompatActivity(), ActivityCallbacks {
     }
 
     private fun updateMenu(fragmentType: NamesOfFragment){
-        _miAppendFaculty?.isVisible = fragmentType==NamesOfFragment.FACULTY
-        _miUpdateFaculty?.isVisible = fragmentType==NamesOfFragment.FACULTY
-        _miDeleteFaculty?.isVisible = fragmentType==NamesOfFragment.FACULTY
+        _miAppendFaculty?.isVisible = fragmentType==NamesOfFragment.CARMODEL
+        _miUpdateFaculty?.isVisible = fragmentType==NamesOfFragment.CARMODEL
+        _miDeleteFaculty?.isVisible = fragmentType==NamesOfFragment.CARMODEL
         _miAppendGroup?.isVisible = fragmentType==NamesOfFragment.GROUP
         _miUpdateGroup?.isVisible = fragmentType==NamesOfFragment.GROUP
         _miDeleteGroup?.isVisible = fragmentType==NamesOfFragment.GROUP
@@ -95,16 +92,16 @@ class MainActivity : AppCompatActivity(), ActivityCallbacks {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId){
-            R.id.miNewFaculty -> {
-                FacultyFragment.getInstance().append()
+            R.id.miNewCarModel -> {
+                CarModelFragment.getInstance().append()
                 true
             }
-            R.id.miUpdateFaculty -> {
-                FacultyFragment.getInstance().update()
+            R.id.miUpdateCarModel -> {
+                CarModelFragment.getInstance().update()
                 true
             }
-            R.id.miDeleteFaculty -> {
-                FacultyFragment.getInstance().delete()
+            R.id.miDeleteCarModel -> {
+                CarModelFragment.getInstance().delete()
                 true
             }
             R.id.miNewGroup -> {
@@ -133,10 +130,10 @@ class MainActivity : AppCompatActivity(), ActivityCallbacks {
 
     override fun showFragment(fragmentType: NamesOfFragment, student: Student?) {
         when (fragmentType){
-            NamesOfFragment.FACULTY ->{
+            NamesOfFragment.CARMODEL ->{
                 supportFragmentManager
                     .beginTransaction()
-                    .replace(R.id.fcvMain, FacultyFragment.getInstance())
+                    .replace(R.id.fcvMain, CarModelFragment.getInstance())
                     .addToBackStack(null)
                     .commit()
             }
@@ -148,11 +145,11 @@ class MainActivity : AppCompatActivity(), ActivityCallbacks {
                     .commit()
             }
 
-            NamesOfFragment.STUDENT -> {
+            NamesOfFragment.SPAREPART -> {
                 if(groupViewModel.group != null && student != null){
                     supportFragmentManager
                         .beginTransaction()
-                        .replace(R.id.fcvMain, StudentInfoFragment.newInstance(student))
+                        .replace(R.id.fcvMain, SparePartInfoFragment.newInstance(student))
                         .addToBackStack(null)
                         .commit()
                 }

@@ -5,15 +5,15 @@
     android:id="@+id/frameLayout2"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.StudentsFragment" >
+    tools:context=".fragments.SparePartsFragment" >
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvStudents"
+        android:id="@+id/rvSpareParts"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fabAppendStudent"
+        android:id="@+id/fabAppendSparePart"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="32dp"

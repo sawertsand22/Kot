@@ -9,7 +9,7 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fcvMain"
-        android:name="com.example.list_4pm2_2425.fragments.FacultyFragment"
+        android:name="com.example.list_4pm2_2425.fragments.CarModelFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"

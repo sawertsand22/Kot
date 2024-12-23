@@ -7,10 +7,10 @@ import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 import java.util.UUID
 
-@Entity(tableName = "faculties",
-    indices = [Index("id"), Index("faculty_name")],
+@Entity(tableName = "CarModels",
+    indices = [Index("id"), Index("carModel_name")],
 )
-data class Faculty(
+data class CarModel(
     @PrimaryKey val id: UUID = UUID.randomUUID(),
-    @SerializedName("faculty_name") @ColumnInfo(name = "faculty_name") var name: String = "",
+    @SerializedName("carModel_name") @ColumnInfo(name = "carModel_name") var name: String = "",
 )

@@ -6,7 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import com.example.list_4pm2_2425.data.Faculty
+import com.example.list_4pm2_2425.data.CarModel
 import com.example.list_4pm2_2425.data.Group
 import com.example.list_4pm2_2425.data.Student
 import kotlinx.coroutines.flow.Flow
@@ -15,22 +15,22 @@ import java.util.UUID
 @Dao
 interface ListDAO {
 
-    @Query("select * from faculties order by faculty_name")
-    fun getFaculty(): Flow<List<Faculty>>
+    @Query("select * from CarModels order by carModel_name")
+    fun getFaculty(): Flow<List<CarModel>>
 
-    @Insert(entity = Faculty::class, onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertFaculty(faculty: Faculty)
+    @Insert(entity = CarModel::class, onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertFaculty(faculty: CarModel)
 
-    @Update(entity = Faculty::class)
-    suspend fun updateFaculty(faculty: Faculty)
+    @Update(entity = CarModel::class)
+    suspend fun updateFaculty(faculty: CarModel)
 
-    @Insert(entity = Faculty::class, onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAllFaculty(facultyList: List<Faculty>)
+    @Insert(entity = CarModel::class, onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAllFaculty(facultyList: List<CarModel>)
 
-    @Delete(entity = Faculty::class)
-    suspend fun deleteFaculty(faculty: Faculty)
+    @Delete(entity = CarModel::class)
+    suspend fun deleteFaculty(faculty: CarModel)
 
-    @Query("delete from faculties")
+    @Query("delete from CarModels")
     suspend fun deleteAllFaculties()
 
 
@@ -38,7 +38,7 @@ interface ListDAO {
     @Query("select * from groups")
     fun getAllGroups(): Flow<List<Group>>
 
-    @Query("select * from groups where faculty_id=:facultyID")
+    @Query("select * from groups where carModel_id=:facultyID")
     fun getFacultyGroups(facultyID: UUID): Flow<List<Group>>
 
     @Insert(entity = Group::class, onConflict = OnConflictStrategy.REPLACE)

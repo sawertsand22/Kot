@@ -63,7 +63,7 @@ class GroupFragment : Fragment(), MainActivity.Edit {
         }
 
         override fun createFragment(position: Int): Fragment {
-            return StudentsFragment.newInstance(groups!![position])
+            return SparePartsFragment.newInstance(groups!![position])
         }
     }
 
@@ -87,8 +87,8 @@ class GroupFragment : Fragment(), MainActivity.Edit {
             })
         }
         val adapter = GroupPageAdapter(requireActivity(), viewModel.groupList.value)
-        binding.vpStudents.adapter = adapter
-        TabLayoutMediator(binding.tlGroups, binding.vpStudents, true, true){
+        binding.vpSpareParts.adapter = adapter
+        TabLayoutMediator(binding.tlGroups, binding.vpSpareParts, true, true){
                 tab, pos ->
             tab.text = groupList.get(pos).name
         }.attach()

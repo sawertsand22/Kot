@@ -5,7 +5,8 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import com.example.list_4pm2_2425.data.Faculty
+import com.example.list_4pm2_2425.data.CarModel
+//import com.example.list_4pm2_2425.data.Faculty
 import com.example.list_4pm2_2425.data.Group
 import com.example.list_4pm2_2425.data.Student
 import com.example.list_4pm2_2425.database.ListDAO
@@ -14,11 +15,11 @@ import java.util.UUID
 
 class OfflineDBRepository(val dao: ListDAO): DBRepository {
 
-    override fun getFaculty(): Flow<List<Faculty>> = dao.getFaculty()
-    override suspend fun insertFaculty(faculty: Faculty) = dao.insertFaculty(faculty)
-    override suspend fun updateFaculty(faculty: Faculty) = dao.updateFaculty(faculty)
-    override suspend fun insertAllFaculty(facultyList: List<Faculty>) = dao.insertAllFaculty(facultyList)
-    override suspend fun deleteFaculty(faculty: Faculty) = dao.deleteFaculty(faculty)
+    override fun getFaculty(): Flow<List<CarModel>> = dao.getFaculty()
+    override suspend fun insertFaculty(faculty: CarModel) = dao.insertFaculty(faculty)
+    override suspend fun updateFaculty(faculty: CarModel) = dao.updateFaculty(faculty)
+    override suspend fun insertAllFaculty(facultyList: List<CarModel>) = dao.insertAllFaculty(facultyList)
+    override suspend fun deleteFaculty(faculty: CarModel) = dao.deleteFaculty(faculty)
     override suspend fun deleteAllFaculties() = dao.deleteAllFaculties()
 
 

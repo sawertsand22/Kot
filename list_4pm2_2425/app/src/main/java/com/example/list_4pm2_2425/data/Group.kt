@@ -8,10 +8,10 @@ import com.google.gson.annotations.SerializedName
 import java.util.UUID
 
 @Entity(tableName = "groups",
-    indices = [Index("id"), Index("faculty_id")],
+    indices = [Index("id"), Index("carModel_id")],
 )
 data class Group(
     @PrimaryKey val id: UUID = UUID.randomUUID(),
     @SerializedName("group_name") @ColumnInfo(name = "group_name") var name: String = "",
-    @SerializedName("faculty_id") @ColumnInfo(name = "faculty_id") var facultyID: UUID?= null
+    @SerializedName("carModel_id") @ColumnInfo(name = "carModel_id") var facultyID: UUID?= null
 )
