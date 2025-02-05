@@ -5,16 +5,14 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import androidx.room.migration.Migration
-import androidx.sqlite.db.SupportSQLiteDatabase
-import com.example.list_4pm2_2425.database.ListTypeConverters
 import com.example.list_4pm2_2425.data.CarModel
-import com.example.list_4pm2_2425.data.Group
-import com.example.list_4pm2_2425.data.Student
+import com.example.list_4pm2_2425.data.Catalog
+import com.example.list_4pm2_2425.data.Sparepart
+import com.example.list_4pm2_2425.data.User
 
 @Database(
-    entities = [CarModel::class, Group::class, Student::class],
-    version = 5,
+    entities = [CarModel::class, Catalog::class, Sparepart::class, User::class],
+    version = 10,
     exportSchema = false
 )
 @TypeConverters(ListTypeConverters::class)

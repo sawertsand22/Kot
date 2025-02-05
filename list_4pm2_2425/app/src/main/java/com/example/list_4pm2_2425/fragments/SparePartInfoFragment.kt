@@ -9,42 +9,39 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import com.example.list_4pm2_2425.R
-import com.example.list_4pm2_2425.data.Student
+import com.example.list_4pm2_2425.data.Sparepart
 import com.example.list_4pm2_2425.databinding.FragmentStudentInfoBinding
 import com.example.list_4pm2_2425.repository.AppRepository
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.text.SimpleDateFormat
+import android.content.Context
 
 private const val ARG_PARAM1 = "student_param"
 
 class SparePartInfoFragment : Fragment() {
-    private lateinit var student: Student
-    private lateinit var _binding: FragmentStudentInfoBinding
-    val binding
-        get()=_binding
 
+    private lateinit var sparepart: Sparepart
+    private lateinit var _binding: FragmentStudentInfoBinding
+    val binding get() = _binding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let{
+        arguments?.let {
             val param1 = it.getString(ARG_PARAM1)
-            if (param1==null)
-                student=Student()
-            else {
-                val paramType = object : TypeToken<Student>() {}.type
-                student = Gson().fromJson<Student>(param1, paramType)
+            sparepart = if (param1 == null) Sparepart() else {
+                val paramType = object : TypeToken<Sparepart>() {}.type
+                Gson().fromJson(param1, paramType)
             }
         }
     }
 
     companion object {
-        fun newInstance(student: Student) =
-            SparePartInfoFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, Gson().toJson(student))
-                }
+        fun newInstance(sparepart: Sparepart) = SparePartInfoFragment().apply {
+            arguments = Bundle().apply {
+                putString(ARG_PARAM1, Gson().toJson(sparepart))
             }
+        }
     }
 
     @SuppressLint("SimpleDateFormat")
@@ -52,44 +49,90 @@ class SparePartInfoFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding=FragmentStudentInfoBinding.inflate(inflater, container, false)
+        _binding = FragmentStudentInfoBinding.inflate(inflater, container, false)
 
+        // Проверка, авторизован ли пользователь
+        val isAuthorized = isUserAuthorized()
+
+        // Отключаем поля для неавторизованных пользователей
+        setFieldsEnabled(isAuthorized)
+
+        // Скрыть кнопку сохранения для неавторизованных пользователей
+        binding.btnSave.visibility = if (isAuthorized) View.VISIBLE else View.GONE
+
+        // Настройка спиннера с полами
         val sexArray = resources.getStringArray(R.array.SEX)
-        val adapter = ArrayAdapter(requireContext(),
-            android.R.layout.simple_spinner_item, sexArray)
+        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, sexArray)
         binding.spSex.adapter = adapter
-        binding.spSex.setSelection(student.sex)
-        binding.spSex.onItemSelectedListener = object :
-                AdapterView.OnItemSelectedListener {
-                    override fun onItemSelected(parent: AdapterView<*>,
-                                                view: View, position: Int, id: Long) {
-                        student.sex = position
-                    }
+        binding.spSex.setSelection(sparepart.sex)
+
+        // Обработчик выбора пола
+        binding.spSex.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+                sparepart.sex = position
+            }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
-                // write code
+                // Ничего не делаем
             }
         }
-        binding.cwProductionDate.setOnDateChangeListener {view, year, month, dayOfMonth ->
-            student.birthDate.time =
-                SimpleDateFormat("yyyy.MM.dd").parse("$year.$month.$dayOfMonth")?.time ?: student.birthDate.time
+
+        // Обработчик изменения даты рождения
+        binding.cwProductionDate.setOnDateChangeListener { view, year, month, dayOfMonth ->
+            sparepart.birthDate.time = SimpleDateFormat("yyyy.MM.dd")
+                .parse("$year.${month + 1}.$dayOfMonth")?.time ?: sparepart.birthDate.time
         }
-        binding.etFirstName.setText(student.firstName)
-        binding.etLastName.setText(student.lastName)
-        binding.etVIN.setText(student.VIN)
-        binding.etMiddleName.setText(student.middleName)
-        binding.cwProductionDate.date = student.birthDate.time
+
+        // Заполняем поля из данных студента
+        binding.etFirstName.setText(sparepart.sparePartName)
+        binding.etNumberCatalog.setText(sparepart.numberCatalog)
+        binding.etVIN.setText(sparepart.VIN)
+        binding.etMiddleName.setText(sparepart.manufacturer)
+        binding.etQuality.setText(sparepart.quantity)
+        binding.etCount.setText(sparepart.count_part)
+        binding.cwProductionDate.date = sparepart.birthDate.time
+
+        // Обработчик кнопки отмены
         binding.btnCancel.setOnClickListener {
             requireActivity().onBackPressedDispatcher.onBackPressed()
         }
+
+        // Обработчик кнопки сохранения
         binding.btnSave.setOnClickListener {
-            student.lastName = binding.etLastName.text.toString()
-            student.firstName = binding.etFirstName.text.toString()
-            student.middleName = binding.etMiddleName.text.toString()
-            student.VIN = binding.etVIN.text.toString()
-            AppRepository.getInstance().updateStudent(student)
-            requireActivity().onBackPressedDispatcher.onBackPressed()
+            saveStudentData()
         }
+
         return binding.root
+    }
+
+    private fun isUserAuthorized(): Boolean {
+        // Проверка авторизации через SharedPreferences
+        val sharedPrefs = requireContext().getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
+        return sharedPrefs.getBoolean("isAuthorized", false)
+    }
+
+    private fun setFieldsEnabled(isEnabled: Boolean) {
+        // Отключаем или включаем все поля в зависимости от авторизации
+        binding.etFirstName.isEnabled = isEnabled
+        binding.etNumberCatalog.isEnabled = isEnabled
+        binding.etVIN.isEnabled = isEnabled
+        binding.etMiddleName.isEnabled = isEnabled
+        binding.etQuality.isEnabled = isEnabled
+        binding.etCount.isEnabled = isEnabled
+        binding.spSex.isEnabled = isEnabled
+        binding.cwProductionDate.isEnabled = isEnabled
+    }
+
+    private fun saveStudentData() {
+        // Сохраняем данные студента в репозитории
+        sparepart.numberCatalog = binding.etNumberCatalog.text.toString()
+        sparepart.sparePartName = binding.etFirstName.text.toString()
+        sparepart.manufacturer = binding.etMiddleName.text.toString()
+        sparepart.VIN = binding.etVIN.text.toString()
+        sparepart.quantity = binding.etQuality.text.toString()
+        sparepart.count_part = binding.etCount.text.toString()
+
+        AppRepository.getInstance().updateStudent(sparepart)
+        requireActivity().onBackPressedDispatcher.onBackPressed()
     }
 }

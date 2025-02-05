@@ -7,8 +7,9 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import com.example.list_4pm2_2425.data.CarModel
-import com.example.list_4pm2_2425.data.Group
-import com.example.list_4pm2_2425.data.Student
+import com.example.list_4pm2_2425.data.Catalog
+import com.example.list_4pm2_2425.data.Sparepart
+import com.example.list_4pm2_2425.data.User
 import kotlinx.coroutines.flow.Flow
 import java.util.UUID
 
@@ -35,36 +36,51 @@ interface ListDAO {
 
 
 
-    @Query("select * from groups")
-    fun getAllGroups(): Flow<List<Group>>
+    @Query("select * from catalog")
+    fun getAllGroups(): Flow<List<Catalog>>
 
-    @Query("select * from groups where carModel_id=:facultyID")
-    fun getFacultyGroups(facultyID: UUID): Flow<List<Group>>
+    @Query("select * from catalog where carModel_id=:facultyID")
+    fun getFacultyGroups(facultyID: UUID): Flow<List<Catalog>>
 
-    @Insert(entity = Group::class, onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertGroup(group: Group)
+    @Insert(entity = Catalog::class, onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertGroup(catalog: Catalog)
 
-    @Delete(entity = Group::class)
-    suspend fun deleteGroup(group: Group)
+    @Delete(entity = Catalog::class)
+    suspend fun deleteGroup(catalog: Catalog)
 
-    @Query("delete from groups")
+    @Query("delete from catalog")
     suspend fun deleteAllGroups()
 
 
 
-    @Query("select * from students")
-    fun getAllStudents(): Flow<List<Student>>
+    @Query("select * from spareparts")
+    fun getAllStudents(): Flow<List<Sparepart>>
 
-    @Query("select * from students where group_id=:groupID")
-    fun getGroupStudents(groupID: UUID): Flow<List<Student>>
+    @Query("select * from spareparts where catalog_id=:groupID")
+    fun getGroupStudents(groupID: UUID): Flow<List<Sparepart>>
 
-    @Insert(entity = Student::class, onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertStudent(student: Student)
+    @Insert(entity = Sparepart::class, onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertStudent(sparepart: Sparepart)
 
-    @Delete(entity = Student::class)
-    suspend fun deleteStudent(student: Student)
+    @Delete(entity = Sparepart::class)
+    suspend fun deleteStudent(sparepart: Sparepart)
 
-    @Query("delete from students")
+    @Query("delete from spareparts")
     suspend fun deleteAllStudents()
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertUser(user: User)
+
+    // Получение пользователя по email
+    @Query("SELECT * FROM users WHERE email = :email LIMIT 1")
+    suspend fun getUserByEmail(email: String): User?
+
+    // Обновление статуса пользователя
+    @Update
+    suspend fun updateUser(user: User)
+
+    // Получение текущего авторизованного пользователя
+    @Query("SELECT * FROM users WHERE isLoggedIn = 1 LIMIT 1")
+    suspend fun getLoggedInUser(): User?
 
 }

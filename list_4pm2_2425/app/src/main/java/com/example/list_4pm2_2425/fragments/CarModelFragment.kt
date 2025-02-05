@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
@@ -36,12 +37,21 @@ class CarModelFragment : Fragment(), MainActivity.Edit {
 
     private lateinit var viewModel: CarModelViewModel
     private lateinit var _binding: FragmentCarmodelBinding
-    val binding
-        get()=_binding
+    //val btnLoginRegister = requireActivity().findViewById<Button>(R.id.btnLoginRegister)
+    //val btnLogout = requireActivity().findViewById<Button>(R.id.btnLogout)
+    private var tabPosition: Int = 0
+
+
+
+    private val binding get() = _binding!!
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
+
+    private var isAuthorized = false//
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -50,17 +60,58 @@ class CarModelFragment : Fragment(), MainActivity.Edit {
         _binding = FragmentCarmodelBinding.inflate(inflater, container, false)
         binding.rvCarModel.layoutManager=
             LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+
+
+        checkAuthorization()  //
         return binding.root
     }
 
+    //
+    private fun checkAuthorization() {
+        // Получаем состояние авторизации из SharedPreferences
+        val sharedPrefs = requireActivity().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+        isAuthorized = sharedPrefs.getBoolean("isAuthorized", false)
+    }
+
+    private fun enableEditing(enabled: Boolean) {
+        // Включаем или отключаем редактирование
+        binding.rvCarModel.isEnabled = enabled
+    }
+
+    //
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this).get(CarModelViewModel::class.java)
         activityCallbacks?.newTitle("Список моделей авто")
+
+        //btnLoginRegister = view.findViewById(R.id.btnLoginRegister)
+        //btnLogout = view.findViewById(R.id.btnLogout)
+        val isAuthorized = isUserAuthorized()
+
+
+
+
+
+        //btnLoginRegister = view.findViewById(R.id.btnLoginRegister)
+
+
+
+
         viewModel.facultyList.observe(viewLifecycleOwner){
             binding.rvCarModel.adapter=FacultyAdapter(it?:emptyList())
         }
     }
+
+
+
+
+    private fun isUserAuthorized(): Boolean {
+        val sharedPrefs = requireContext().getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
+        return sharedPrefs.getBoolean("isAuthorized", false)
+    }
+
 
     private inner class FacultyAdapter(private val items: List<CarModel>)
         : RecyclerView.Adapter<FacultyAdapter.ItemHolder>() {
@@ -105,23 +156,37 @@ class CarModelFragment : Fragment(), MainActivity.Edit {
 
 
                     val cl = View.OnClickListener {
-                        viewModel.setCurrentFaculty(faculty)
-                        updateCurrentView(itemView)
+                        if (isAuthorized) {
+                            // Можно редактировать
+                            editFaculty(faculty.name)
+                        } else {
+                            // Только просмотр
+                            viewModel.setCurrentFaculty(faculty)
+                        }
+                       // viewModel.setCurrentFaculty(faculty)
+                        //updateCurrentView(itemView)
                     }
 
                     val icl=itemView.findViewById<ConstraintLayout>(R.id.clCarModel)
                     icl.setOnClickListener(cl)
                     icl.setBackgroundColor(
+
                         ContextCompat.getColor(requireContext(), R.color.white))
 
                     if (faculty==viewModel.faculty)
+
+
+
                         updateCurrentView(itemView)
 
                     icl.setOnLongClickListener {
                         icl.callOnClick()
-                        activityCallbacks?.showFragment(NamesOfFragment.GROUP)
+                        activityCallbacks?.showFragment(NamesOfFragment.CATALOG)
                         true
                     }
+
+
+
 
                 }
             }
@@ -140,6 +205,10 @@ class CarModelFragment : Fragment(), MainActivity.Edit {
     }
 
     private fun deleteDialog(){
+        if (!isUserAuthorized()) {
+            Toast.makeText(requireContext(), "Требуется авторизация для изменения модели", Toast.LENGTH_SHORT).show()
+            return
+        }
         AlertDialog.Builder(requireContext())
             .setTitle("Удаление!")
             .setMessage("Вы действительно хотите удалить модель авто ${viewModel.faculty?.name ?: ""}?")
@@ -153,6 +222,10 @@ class CarModelFragment : Fragment(), MainActivity.Edit {
     }
 
     private fun editFaculty(facultyName: String=""){
+        if (!isUserAuthorized()) {
+            Toast.makeText(requireContext(), "Требуется авторизация для изменения модели", Toast.LENGTH_SHORT).show()
+            return
+        }
         val mDialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_string, null)
         val messageText = mDialogView.findViewById<TextView>(R.id.tvInfo)
         val inputString = mDialogView.findViewById<EditText>(R.id.etString)

@@ -4,18 +4,11 @@ package com.example.list_4pm2_2425.repository
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asLiveData
-import androidx.preference.PreferenceManager
 import com.example.list_4pm2_2425.ListApp4PM_1_2425
-import com.example.list_4pm2_2425.R
 import com.example.list_4pm2_2425.data.CarModel
-import com.example.list_4pm2_2425.data.Group
-import com.example.list_4pm2_2425.data.ListOfFaculty
-import com.example.list_4pm2_2425.data.ListOfGroup
-import com.example.list_4pm2_2425.data.ListOfStudent
-import com.example.list_4pm2_2425.data.Student
+import com.example.list_4pm2_2425.data.Catalog
+import com.example.list_4pm2_2425.data.Sparepart
 import com.example.list_4pm2_2425.database.ListDatabase
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
@@ -38,9 +31,9 @@ class AppRepository {
    // var listOfFaculty: MutableLiveData<ListOfFaculty?> = MutableLiveData()
     var faculty: MutableLiveData<CarModel> = MutableLiveData()
     //var listOfGroup: MutableLiveData<ListOfGroup> = MutableLiveData()
-    var group: MutableLiveData<Group> = MutableLiveData()
+    var catalog: MutableLiveData<Catalog> = MutableLiveData()
     //var listOfStudent: MutableLiveData<ListOfStudent> = MutableLiveData()
-    var student: MutableLiveData<Student> = MutableLiveData()
+    var sparepart: MutableLiveData<Sparepart> = MutableLiveData()
 
 //    fun addFaculty(faculty: Faculty){
 //        val listTmp = (listOfFaculty.value ?: ListOfFaculty()).apply {
@@ -139,20 +132,20 @@ class AppRepository {
 //        setCurrentGroup(group)
 //    }
 
-    fun getGroupPosition(group: Group): Int = listOfGroup.value?.indexOfFirst {
-        it.id==group.id} ?:-1
+    fun getGroupPosition(catalog: Catalog): Int = listOfCatalog.value?.indexOfFirst {
+        it.id==catalog.id} ?:-1
 
-    fun getGroupPosition()=getGroupPosition(group.value?: Group())
+    fun getGroupPosition()=getGroupPosition(catalog.value?: Catalog())
 
     fun setCurrentGroup(position: Int){
-        if(listOfGroup.value==null || position<0 ||
-            (listOfGroup.value?.size!!<=position))
+        if(listOfCatalog.value==null || position<0 ||
+            (listOfCatalog.value?.size!!<=position))
             return
-        setCurrentGroup(listOfGroup.value!![position])
+        setCurrentGroup(listOfCatalog.value!![position])
     }
 
-    fun setCurrentGroup(_group: Group){
-        group.postValue(_group)
+    fun setCurrentGroup(_catalog: Catalog){
+        catalog.postValue(_catalog)
     }
 
 //    fun updateGroup(group: Group){
@@ -173,10 +166,10 @@ class AppRepository {
 //    }
 
     val facultyGroups
-        get()=listOfGroup.value?.filter{it.facultyID == (faculty.value?.id ?: 0)}?.sortedBy { it.name } ?: listOf()
+        get()=listOfCatalog.value?.filter{it.carModelID == (faculty.value?.id ?: 0)}?.sortedBy { it.name } ?: listOf()
 
     fun getFacultyGroups(facultyID: UUID) =
-        (listOfGroup.value?.filter{ it.facultyID == facultyID }?.sortedBy { it.name } ?: listOf())
+        (listOfCatalog.value?.filter{ it.carModelID == facultyID }?.sortedBy { it.name } ?: listOf())
 
 //    fun addStudent(student: Student){
 //        val listTmp = (listOfStudent.value ?: ListOfStudent()).apply {
@@ -186,20 +179,20 @@ class AppRepository {
 //        setCurrentStudent(student)
 //    }
 
-    fun getStudentPosition(student: Student): Int = listOfStudent.value?.indexOfFirst {
-        it.id==student.id} ?:-1
+    fun getStudentPosition(sparepart: Sparepart): Int = listOfSparepart.value?.indexOfFirst {
+        it.id==sparepart.id} ?:-1
 
-    fun getStudentPosition()=getStudentPosition(student.value?: Student())
+    fun getStudentPosition()=getStudentPosition(sparepart.value?: Sparepart())
 
     fun setCurrentStudent(position: Int){
-        if(listOfStudent.value==null || position<0 ||
-            (listOfStudent.value?.size!!<=position))
+        if(listOfSparepart.value==null || position<0 ||
+            (listOfSparepart.value?.size!!<=position))
             return
-        setCurrentStudent(listOfStudent.value!![position])
+        setCurrentStudent(listOfSparepart.value!![position])
     }
 
-    fun setCurrentStudent(_student: Student){
-        student.postValue(_student)
+    fun setCurrentStudent(_sparepart: Sparepart){
+        sparepart.postValue(_sparepart)
     }
 
 //    fun updateStudent(student: Student){
@@ -220,10 +213,10 @@ class AppRepository {
 //    }
 
     val groupStudents
-        get()=listOfStudent.value?.filter{it.groupID == (group.value?.id ?: 0)}?.sortedBy { it.shortName } ?: listOf()
+        get()=listOfSparepart.value?.filter{it.catalogID == (catalog.value?.id ?: 0)}?.sortedBy { it.shortName } ?: listOf()
 
     fun getGroupStudents(groupID: UUID) =
-        (listOfStudent.value?.filter{ it.groupID == groupID }?.sortedBy { it.shortName } ?: listOf())
+        (listOfSparepart.value?.filter{ it.catalogID == groupID }?.sortedBy { it.shortName } ?: listOf())
 
 
     private val listDB by lazy { OfflineDBRepository(ListDatabase.getDatabase(ListApp4PM_1_2425.context).listDAO()) }
@@ -234,12 +227,12 @@ class AppRepository {
         myCoroutineScope.cancel()
     }
 
-    val listOfFaculty : LiveData<List<CarModel>> = listDB.getFaculty()
+    val listOfFaculty : LiveData<List<CarModel>> = listDB.getCarModel()
         .asLiveData()
 
     fun addFaculty(faculty: CarModel){
         myCoroutineScope.launch {
-            listDB.insertFaculty(faculty)
+            listDB.insertCarModel(faculty)
             setCurrentFaculty(faculty)
         }
     }
@@ -250,48 +243,48 @@ class AppRepository {
 
     fun deleteFaculty(faculty: CarModel){
         myCoroutineScope.launch {
-            listDB.deleteFaculty(faculty)
+            listDB.deleteCarModel(faculty)
             setCurrentFaculty(0)
         }
     }
 
-    val listOfGroup: LiveData<List<Group>> = listDB.getAllGroups().asLiveData()
+    val listOfCatalog: LiveData<List<Catalog>> = listDB.getAllCatalogs().asLiveData()
 
-    fun addGroup(group: Group){
+    fun addGroup(catalog: Catalog){
         myCoroutineScope.launch {
-            listDB.insertGroup(group)
-            setCurrentGroup(group)
+            listDB.insertCatalog(catalog)
+            setCurrentGroup(catalog)
         }
     }
 
-    fun updateGroup(group: Group){
-        addGroup(group)
+    fun updateGroup(catalog: Catalog){
+        addGroup(catalog)
     }
 
-    fun deleteGroup(group: Group){
+    fun deleteGroup(catalog: Catalog){
         myCoroutineScope.launch {
-            listDB.deleteGroup(group)
+            listDB.deleteCatalog(catalog)
             setCurrentGroup(0)
         }
     }
 
-    val listOfStudent: LiveData<List<Student>> = listDB.getAllStudents().asLiveData()
+    val listOfSparepart: LiveData<List<Sparepart>> = listDB.getAllSpareparts().asLiveData()
 
-    fun addStudent(student: Student){
+    fun addStudent(sparepart: Sparepart){
         myCoroutineScope.launch {
-            listDB.insertStudent(student)
-            setCurrentStudent(student)
+            listDB.insertSparepart(sparepart)
+            setCurrentStudent(sparepart)
         }
 
     }
 
-    fun updateStudent(student: Student){
-        addStudent(student)
+    fun updateStudent(sparepart: Sparepart){
+        addStudent(sparepart)
     }
 
-    fun deleteStudent(student: Student){
+    fun deleteStudent(sparepart: Sparepart){
         myCoroutineScope.launch {
-            listDB.deleteStudent(student)
+            listDB.deleteSparepart(sparepart)
             setCurrentStudent(0)
         }
     }

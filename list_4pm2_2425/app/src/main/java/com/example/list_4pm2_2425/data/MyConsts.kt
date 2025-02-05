@@ -5,5 +5,5 @@ object MyConsts {
 }
 
 enum class NamesOfFragment {
-    CARMODEL, GROUP, SPAREPART
+    CARMODEL, CATALOG, SPAREPART, LOGIN, REGISTER
 }
