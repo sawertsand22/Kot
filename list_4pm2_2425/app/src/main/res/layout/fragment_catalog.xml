@@ -4,15 +4,17 @@
     android:id="@+id/fcvMain"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.CatalogFragment">
+    tools:context=".fragments.CatalogFragment"
+    tools:layout_editor_absoluteX="-24dp"
+    tools:layout_editor_absoluteY="48dp">
 
     <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tlGroups"
+        android:id="@+id/tlCatalogs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@+id/vpSpareParts"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/etSearch"
         app:layout_constraintVertical_bias="0.5">
@@ -20,27 +22,34 @@
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Monday" />
+            android:text="Monday"
+            tools:layout_editor_absoluteX="-24dp"
+            tools:layout_editor_absoluteY="230dp" />
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Tuesday" />
+            android:text="Tuesday"
+            tools:layout_editor_absoluteX="-24dp"
+            tools:layout_editor_absoluteY="230dp" />
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Wednesday" />
+            android:text="Wednesday"
+            tools:layout_editor_absoluteX="-24dp"
+            tools:layout_editor_absoluteY="230dp" />
     </com.google.android.material.tabs.TabLayout>
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/vpSpareParts"
-        android:layout_width="406dp"
-        android:layout_height="252dp"
-        app:layout_constraintBottom_toTopOf="@+id/btnLogout"
+        android:layout_width="412dp"
+        android:layout_height="381dp"
+        app:layout_constraintBottom_toTopOf="@+id/btnLoginRegister"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tlGroups"
+        app:layout_constraintTop_toBottomOf="@+id/tlCatalogs"
         app:layout_constraintVertical_bias="0.5" />
 
     <EditText
@@ -50,31 +59,35 @@
         android:ems="10"
         android:hint="Поиск"
         android:inputType="text"
-        app:layout_constraintBottom_toTopOf="@+id/tlGroups"
+        app:layout_constraintBottom_toTopOf="@+id/tlCatalogs"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.257"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.5" />
 
+
     <Button
         android:id="@+id/btnLoginRegister"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="242dp"
+        android:layout_height="47dp"
         android:text="Войти / Зарегистрироваться"
-        app:layout_constraintTop_toBottomOf="@id/vpSpareParts"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp" />
-
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/btnLogout"
+        app:layout_constraintTop_toBottomOf="@+id/vpSpareParts"
+        app:layout_constraintVertical_bias="0.5" />
 
     <Button
         android:id="@+id/btnLogout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Выйти"
-        app:layout_constraintTop_toBottomOf="@id/btnLoginRegister"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btnLoginRegister"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp" />
+        app:layout_constraintTop_toBottomOf="@+id/vpSpareParts"
+        app:layout_constraintVertical_bias="0.506" />
 </androidx.constraintlayout.widget.ConstraintLayout>

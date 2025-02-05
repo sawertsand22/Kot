@@ -10,15 +10,15 @@ import com.example.list_4pm2_2425.repository.AppRepository
 class SparePartsViewModel : ViewModel() {
     var sparepartList: MutableLiveData<List<Sparepart>> = MutableLiveData()
     private var _sparepart: Sparepart? = null
-    val student
+    val sparePart
         get()=_sparepart
 
     var catalog: Catalog? = null
     private var allSpareparts: List<Sparepart> = emptyList()
-    fun set_Group(catalog: Catalog){
+    fun set_Catalog(catalog: Catalog){
         this.catalog = catalog
         AppRepository.getInstance().listOfSparepart.observeForever { catalogs ->
-            allSpareparts = AppRepository.getInstance().getGroupStudents(catalog.id) // Инициализируем исходный список
+            allSpareparts = AppRepository.getInstance().getCatalogSpareParts(catalog.id) // Инициализируем исходный список
             sparepartList.postValue(allSpareparts) // Изначально отображаем полный список
         }
         AppRepository.getInstance().sparepart.observeForever{
@@ -26,18 +26,18 @@ class SparePartsViewModel : ViewModel() {
         }
     }
 
-    fun deleteStudent(){
-        if(student != null)
-            AppRepository.getInstance().deleteStudent(student!!)
+    fun deleteSparePart(){
+        if(sparePart != null)
+            AppRepository.getInstance().deleteSparePart(sparePart!!)
     }
 
-    fun setCurrentStudent(sparepart: Sparepart){
-        AppRepository.getInstance().setCurrentStudent(sparepart)
+    fun setCurrentSparePart(sparepart: Sparepart){
+        AppRepository.getInstance().setCurrentSparePart(sparepart)
     }
 
     // Фильтрация студентов по имени
-    fun filterStudentsByName(name: String) {
-        Log.d("FilterStudents", "Filtering by name: $name")
+    fun filterSparePartsByName(name: String) {
+        Log.d("FilterSpareParts", "Filtering by name: $name")
 
         val filteredList = allSpareparts.filter { // Фильтруем ИСХОДНЫЙ список!
             it.sparePartName.trim().contains(name, ignoreCase = true) ||
@@ -45,7 +45,7 @@ class SparePartsViewModel : ViewModel() {
                     it.numberCatalog.trim().contains(name, ignoreCase = true)
         }
 
-        Log.d("FilterStudents", "Filtered list size: ${filteredList.size}")
+        Log.d("FilterSpareParts", "Filtered list size: ${filteredList.size}")
         sparepartList.postValue(filteredList) // Обновляем LiveData ОТФИЛЬТРОВАННЫМ списком!
     }
 

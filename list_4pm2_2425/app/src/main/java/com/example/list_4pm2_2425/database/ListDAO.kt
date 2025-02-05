@@ -17,56 +17,56 @@ import java.util.UUID
 interface ListDAO {
 
     @Query("select * from CarModels order by carModel_name")
-    fun getFaculty(): Flow<List<CarModel>>
+    fun getCarModel(): Flow<List<CarModel>>
 
     @Insert(entity = CarModel::class, onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertFaculty(faculty: CarModel)
+    suspend fun insertCarModel(carModel: CarModel)
 
     @Update(entity = CarModel::class)
-    suspend fun updateFaculty(faculty: CarModel)
+    suspend fun updateCarModel(carModel: CarModel)
 
     @Insert(entity = CarModel::class, onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAllFaculty(facultyList: List<CarModel>)
+    suspend fun insertAllCarModel(carModelList: List<CarModel>)
 
     @Delete(entity = CarModel::class)
-    suspend fun deleteFaculty(faculty: CarModel)
+    suspend fun deleteCarModel(carModel: CarModel)
 
     @Query("delete from CarModels")
-    suspend fun deleteAllFaculties()
+    suspend fun deleteAllCarModel()
 
 
 
     @Query("select * from catalog")
-    fun getAllGroups(): Flow<List<Catalog>>
+    fun getAllCatalog(): Flow<List<Catalog>>
 
-    @Query("select * from catalog where carModel_id=:facultyID")
-    fun getFacultyGroups(facultyID: UUID): Flow<List<Catalog>>
+    @Query("select * from catalog where carModel_id=:carModelID")
+    fun getCarModelCatalogs(carModelID: UUID): Flow<List<Catalog>>
 
     @Insert(entity = Catalog::class, onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertGroup(catalog: Catalog)
+    suspend fun insertCatalog(catalog: Catalog)
 
     @Delete(entity = Catalog::class)
-    suspend fun deleteGroup(catalog: Catalog)
+    suspend fun deleteCatalog(catalog: Catalog)
 
     @Query("delete from catalog")
-    suspend fun deleteAllGroups()
+    suspend fun deleteAllCatalogs()
 
 
 
     @Query("select * from spareparts")
-    fun getAllStudents(): Flow<List<Sparepart>>
+    fun getAllSparepart(): Flow<List<Sparepart>>
 
-    @Query("select * from spareparts where catalog_id=:groupID")
-    fun getGroupStudents(groupID: UUID): Flow<List<Sparepart>>
+    @Query("select * from spareparts where catalog_id=:catalogID")
+    fun getCatalogSparepart(catalogID: UUID): Flow<List<Sparepart>>
 
     @Insert(entity = Sparepart::class, onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertStudent(sparepart: Sparepart)
+    suspend fun insertSparepart(sparepart: Sparepart)
 
     @Delete(entity = Sparepart::class)
-    suspend fun deleteStudent(sparepart: Sparepart)
+    suspend fun deleteSparepart(sparepart: Sparepart)
 
     @Query("delete from spareparts")
-    suspend fun deleteAllStudents()
+    suspend fun deleteAllSparepart()
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertUser(user: User)

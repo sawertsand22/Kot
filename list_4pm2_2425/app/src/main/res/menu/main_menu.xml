@@ -3,13 +3,13 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/miNewGroup"
+        android:id="@+id/miNewCatalog"
         android:title="Добавить группу" />
     <item
-        android:id="@+id/miUpdateGroup"
+        android:id="@+id/miUpdateCatalog"
         android:title="Изменить группу" />
     <item
-        android:id="@+id/miDeleteGroup"
+        android:id="@+id/miDeleteCatalog"
         android:title="Удалить группу" />
     <item
         android:id="@+id/miNewCarModel"

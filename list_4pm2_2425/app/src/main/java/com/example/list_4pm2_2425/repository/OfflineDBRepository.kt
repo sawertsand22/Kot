@@ -51,26 +51,26 @@ class OfflineDBRepository(val dao: ListDAO): DBRepository {
         }
     }
 
-    override fun getCarModel(): Flow<List<CarModel>> = dao.getFaculty()
-    override suspend fun insertCarModel(faculty: CarModel) = dao.insertFaculty(faculty)
-    override suspend fun updateCarModel(faculty: CarModel) = dao.updateFaculty(faculty)
-    override suspend fun insertAllCarModel(facultyList: List<CarModel>) = dao.insertAllFaculty(facultyList)
-    override suspend fun deleteCarModel(faculty: CarModel) = dao.deleteFaculty(faculty)
-    override suspend fun deleteAllCarModel() = dao.deleteAllFaculties()
+    override fun getCarModel(): Flow<List<CarModel>> = dao.getCarModel()
+    override suspend fun insertCarModel(carModel: CarModel) = dao.insertCarModel(carModel)
+    override suspend fun updateCarModel(carModel: CarModel) = dao.updateCarModel(carModel)
+    override suspend fun insertAllCarModel(carModelList: List<CarModel>) = dao.insertAllCarModel(carModelList)
+    override suspend fun deleteCarModel(carModel: CarModel) = dao.deleteCarModel(carModel)
+    override suspend fun deleteAllCarModel() = dao.deleteAllCarModel()
 
 
-    override fun getAllCatalogs(): Flow<List<Catalog>> = dao.getAllGroups()
-    override fun getFacultyCatalogs(facultyID: UUID): Flow<List<Catalog>> = dao.getFacultyGroups(facultyID)
-    override suspend fun insertCatalog(catalog: Catalog) = dao.insertGroup(catalog)
-    override suspend fun deleteCatalog(catalog: Catalog) = dao.deleteGroup(catalog)
-    override suspend fun deleteAllCatalogs() = dao.deleteAllGroups()
+    override fun getAllCatalogs(): Flow<List<Catalog>> = dao.getAllCatalog()
+    override fun getCarModelCatalogs(carModelID: UUID): Flow<List<Catalog>> = dao.getCarModelCatalogs(carModelID)
+    override suspend fun insertCatalog(catalog: Catalog) = dao.insertCatalog(catalog)
+    override suspend fun deleteCatalog(catalog: Catalog) = dao.deleteCatalog(catalog)
+    override suspend fun deleteAllCatalogs() = dao.deleteAllCatalogs()
 
 
 
-    override fun getAllSpareparts(): Flow<List<Sparepart>> = dao.getAllStudents()
-    override fun getGroupSpareparts(groupID: UUID): Flow<List<Sparepart>> = dao.getGroupStudents(groupID)
-    override suspend fun insertSparepart(sparepart: Sparepart) = dao.insertStudent(sparepart)
-    override suspend fun deleteSparepart(sparepart: Sparepart) = dao.deleteStudent(sparepart)
-    override suspend fun deleteAllSpareparts() = dao.deleteAllStudents()
+    override fun getAllSpareparts(): Flow<List<Sparepart>> = dao.getAllSparepart()
+    override fun getCatalogSpareparts(catalogID: UUID): Flow<List<Sparepart>> = dao.getCatalogSparepart(catalogID)
+    override suspend fun insertSparepart(sparepart: Sparepart) = dao.insertSparepart(sparepart)
+    override suspend fun deleteSparepart(sparepart: Sparepart) = dao.deleteSparepart(sparepart)
+    override suspend fun deleteAllSpareparts() = dao.deleteAllSparepart()
 
 }

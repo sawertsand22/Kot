@@ -6,12 +6,12 @@ import com.example.list_4pm2_2425.data.CarModel
 import com.example.list_4pm2_2425.repository.AppRepository
 
 class CarModelViewModel : ViewModel() {
-    var facultyList: LiveData<List<CarModel>> = AppRepository.getInstance().listOfFaculty
+    var CarModelList: LiveData<List<CarModel>> = AppRepository.getInstance().listOfCarModel
 
-    private var _faculty: CarModel? = null
+    private var _carModel: CarModel? = null
 
-    val faculty
-        get()=_faculty
+    val carModel
+        get()=_carModel
 
 //    private val facultyListObserver = Observer<ListOfFaculty?>{
 //            list ->
@@ -20,30 +20,30 @@ class CarModelViewModel : ViewModel() {
 
     init {
   //      AppRepository.getInstance().listOfFaculty.observeForever(facultyListObserver)
-        AppRepository.getInstance().faculty.observeForever {
-            _faculty=it
+        AppRepository.getInstance().carModel.observeForever {
+            _carModel=it
         }
     }
 
-    fun deleteFaculty(){
-        if(faculty!=null)
-            AppRepository.getInstance().deleteFaculty(faculty!!)
+    fun deleteCarModel(){
+        if(carModel!=null)
+            AppRepository.getInstance().deleteCarModel(carModel!!)
     }
 
-    fun appendFaculty(facultyName: String){
-        val faculty=CarModel()
-        faculty.name=facultyName
-        AppRepository.getInstance().updateFaculty(faculty)
+    fun appendCarModel(carModelName: String){
+        val carModel=CarModel()
+        carModel.name=carModelName
+        AppRepository.getInstance().updateCarModel(carModel)
     }
 
-    fun updateFaculty(facultyName: String){
-        if (_faculty!=null){
-            _faculty!!.name=facultyName
-            AppRepository.getInstance().updateFaculty(_faculty!!)
+    fun updateCarModel(CarModelName: String){
+        if (_carModel!=null){
+            _carModel!!.name=CarModelName
+            AppRepository.getInstance().updateCarModel(_carModel!!)
         }
     }
 
-    fun setCurrentFaculty(faculty: CarModel){
-        AppRepository.getInstance().setCurrentFaculty(faculty)
+    fun setCurrentCarModel(carModel: CarModel){
+        AppRepository.getInstance().setCurrentCarModel(carModel)
     }
 }

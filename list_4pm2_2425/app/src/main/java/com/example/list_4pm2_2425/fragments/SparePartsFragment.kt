@@ -40,7 +40,7 @@ class SparePartsFragment : Fragment() {
             return SparePartsFragment()
         }
     }
-    private lateinit var studentAdapter: StudentAdapter  // Объявляем адаптер
+    private lateinit var sparePartAdapter: SparePartAdapter  // Объявляем адаптер
     private lateinit var viewModel: SparePartsViewModel
 
     private lateinit var _binding: FragmentSparepartsBinding
@@ -69,24 +69,24 @@ class SparePartsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this).get(SparePartsViewModel::class.java)
-        viewModel.set_Group(catalog)
+        viewModel.set_Catalog(catalog)
 
-        studentAdapter = StudentAdapter(emptyList()) // Инициализируем адаптер ПУСТЫМ списком
-        binding.rvSpareParts.adapter = studentAdapter
+        sparePartAdapter = SparePartAdapter(emptyList()) // Инициализируем адаптер ПУСТЫМ списком
+        binding.rvSpareParts.adapter = sparePartAdapter
 
 
-        viewModel.sparepartList.observe(viewLifecycleOwner) { students ->
-            Log.d("FragmentObserve", "Students list updated in fragment: ${students.size}, first item: ${students.firstOrNull()?.sparePartName}")
-            if (students != null) {
-                Log.d("FragmentObserve", "Students list is not null")
-                studentAdapter.updateData(students)
+        viewModel.sparepartList.observe(viewLifecycleOwner) { spareparts ->
+            Log.d("FragmentObserve", "SparePart list updated in fragment: ${spareparts.size}, first item: ${spareparts.firstOrNull()?.sparePartName}")
+            if (spareparts != null) {
+                Log.d("FragmentObserve", "SparePart list is not null")
+                sparePartAdapter.updateData(spareparts)
             } else {
-                Log.d("FragmentObserve", "Students list is null")
+                Log.d("FragmentObserve", "SparePart list is null")
             }
         }
 
         binding.fabAppendSparePart.setOnClickListener {
-            editStudent(Sparepart().apply { catalogID = viewModel.catalog?.id })
+            editSparePart(Sparepart().apply { catalogID = viewModel.catalog?.id })
         }
     }
 
@@ -102,9 +102,9 @@ class SparePartsFragment : Fragment() {
         }
         AlertDialog.Builder(requireContext())
             .setTitle("Удаление")
-            .setMessage("Вы действительно хотите удалить запчасть ${viewModel.student?.manufacturer ?: ""}?")
+            .setMessage("Вы действительно хотите удалить запчасть ${viewModel.sparePart?.manufacturer ?: ""}?")
             .setPositiveButton("Да"){_, _ ->
-                viewModel.deleteStudent()
+                viewModel.deleteSparePart()
             }
             .setNegativeButton("Нет", null)
             .setCancelable(true)
@@ -112,13 +112,13 @@ class SparePartsFragment : Fragment() {
             .show()
     }
 
-    private fun editStudent(sparepart: Sparepart){
+    private fun editSparePart(sparepart: Sparepart){
         (requireActivity() as ActivityCallbacks).showFragment(NamesOfFragment.SPAREPART, sparepart)
         (requireActivity() as ActivityCallbacks).newTitle("Группа ${viewModel.catalog?.name}")
     }
 
-    private inner class StudentAdapter(private var items: List<Sparepart>) :
-        RecyclerView.Adapter<StudentAdapter.ItemHolder>() {
+    private inner class SparePartAdapter(private var items: List<Sparepart>) :
+        RecyclerView.Adapter<SparePartAdapter.ItemHolder>() {
 
         inner class StudentDiffCallback(private val oldList: List<Sparepart>, private val newList: List<Sparepart>) : DiffUtil.Callback() {
             override fun getOldListSize(): Int = oldList.size
@@ -183,10 +183,10 @@ class SparePartsFragment : Fragment() {
             val ll = lastView?.findViewById<LinearLayout>(R.id.llSparePartButtons)
             ll?.visibility = View.INVISIBLE
             ll?.layoutParams = ll?.layoutParams?.apply { this?.width = 1 }
-            lastView?.findViewById<ConstraintLayout>(R.id.clStudent)?.setBackgroundColor(
+            lastView?.findViewById<ConstraintLayout>(R.id.clSparePart)?.setBackgroundColor(
                 ContextCompat.getColor(requireContext(), R.color.white)
             )
-            view.findViewById<ConstraintLayout>(R.id.clStudent).setBackgroundColor(
+            view.findViewById<ConstraintLayout>(R.id.clSparePart).setBackgroundColor(
                 ContextCompat.getColor(requireContext(), R.color.myBlue)
             )
             lastView = view
@@ -198,15 +198,15 @@ class SparePartsFragment : Fragment() {
             @OptIn(DelicateCoroutinesApi::class)
             fun bind(sparepart: Sparepart) {
                 this.sparepart = sparepart
-                if (sparepart == viewModel.student) {
+                if (sparepart == viewModel.sparePart) {
                     updateCurrentView(itemView)
                 }
                 val tv = itemView.findViewById<TextView>(R.id.tvSparePartName)
                 tv.text = sparepart.sparePartName
-                val cl = itemView.findViewById<ConstraintLayout>(R.id.clStudent)
+                val cl = itemView.findViewById<ConstraintLayout>(R.id.clSparePart)
                 cl.setOnClickListener {
                     tv.text = sparepart.sparePartName
-                    viewModel.setCurrentStudent(sparepart)
+                    viewModel.setCurrentSparePart(sparepart)
                     updateCurrentView(itemView)
                 }
                 tv.setOnLongClickListener {
@@ -215,10 +215,10 @@ class SparePartsFragment : Fragment() {
                 }
                 val tv2 = itemView.findViewById<TextView>(R.id.tvSparePartName2)
                 tv2.text = sparepart.manufacturer
-                val cl2 = itemView.findViewById<ConstraintLayout>(R.id.clStudent)
+                val cl2 = itemView.findViewById<ConstraintLayout>(R.id.clSparePart)
                 cl2.setOnClickListener {
                     tv2.text = sparepart.manufacturer
-                    viewModel.setCurrentStudent(sparepart)
+                    viewModel.setCurrentSparePart(sparepart)
                     updateCurrentView(itemView)
                 }
                 tv2.setOnLongClickListener {
@@ -227,10 +227,10 @@ class SparePartsFragment : Fragment() {
                 }
                 val tv3 = itemView.findViewById<TextView>(R.id.tvSparePartName3)
                 tv3.text = sparepart.numberCatalog
-                val cl3 = itemView.findViewById<ConstraintLayout>(R.id.clStudent)
+                val cl3 = itemView.findViewById<ConstraintLayout>(R.id.clSparePart)
                 cl3.setOnClickListener {
                     tv3.text = sparepart.numberCatalog
-                    viewModel.setCurrentStudent(sparepart)
+                    viewModel.setCurrentSparePart(sparepart)
                     updateCurrentView(itemView)
                 }
                 tv3.setOnLongClickListener {
@@ -238,7 +238,7 @@ class SparePartsFragment : Fragment() {
                     true
                 }
                 itemView.findViewById<ImageButton>(R.id.ibEditSparePart).setOnClickListener {
-                    editStudent(sparepart)
+                    editSparePart(sparepart)
                 }
                 itemView.findViewById<ImageButton>(R.id.ibDeleteSparePart).setOnClickListener {
                     deleteDialog()

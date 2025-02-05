@@ -65,34 +65,34 @@ class MainActivity : AppCompatActivity(), ActivityCallbacks {
     }
     var activeFragment: NamesOfFragment = NamesOfFragment.CARMODEL
 
-    private var _miAppendFaculty: MenuItem? = null
-    private var _miUpdateFaculty: MenuItem? = null
-    private var _miDeleteFaculty: MenuItem? = null
-    private var _miAppendGroup: MenuItem? = null
-    private var _miUpdateGroup: MenuItem? = null
-    private var _miDeleteGroup: MenuItem? = null
+    private var _miAppendCarModel: MenuItem? = null
+    private var _miUpdateCarModel: MenuItem? = null
+    private var _miDeleteCarModel: MenuItem? = null
+    private var _miAppendCatalog: MenuItem? = null
+    private var _miUpdateCatalog: MenuItem? = null
+    private var _miDeleteCatalog: MenuItem? = null
 
     private val catalogViewModel: CatalogViewModel by viewModels()
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.main_menu, menu)
-        _miAppendFaculty = menu?.findItem(R.id.miNewCarModel)
-        _miUpdateFaculty = menu?.findItem(R.id.miUpdateCarModel)
-        _miDeleteFaculty = menu?.findItem(R.id.miDeleteCarModel)
-        _miAppendGroup = menu?.findItem(R.id.miNewGroup)
-        _miUpdateGroup = menu?.findItem(R.id.miUpdateGroup)
-        _miDeleteGroup = menu?.findItem(R.id.miDeleteGroup)
+        _miAppendCarModel = menu?.findItem(R.id.miNewCarModel)
+        _miUpdateCarModel = menu?.findItem(R.id.miUpdateCarModel)
+        _miDeleteCarModel = menu?.findItem(R.id.miDeleteCarModel)
+        _miAppendCatalog = menu?.findItem(R.id.miNewCatalog)
+        _miUpdateCatalog = menu?.findItem(R.id.miUpdateCatalog)
+        _miDeleteCatalog = menu?.findItem(R.id.miDeleteCatalog)
         updateMenu(activeFragment)
         return true
     }
 
     private fun updateMenu(fragmentType: NamesOfFragment){
-        _miAppendFaculty?.isVisible = fragmentType==NamesOfFragment.CARMODEL
-        _miUpdateFaculty?.isVisible = fragmentType==NamesOfFragment.CARMODEL
-        _miDeleteFaculty?.isVisible = fragmentType==NamesOfFragment.CARMODEL
-        _miAppendGroup?.isVisible = fragmentType==NamesOfFragment.CATALOG
-        _miUpdateGroup?.isVisible = fragmentType==NamesOfFragment.CATALOG
-        _miDeleteGroup?.isVisible = fragmentType==NamesOfFragment.CATALOG
+        _miAppendCarModel?.isVisible = fragmentType==NamesOfFragment.CARMODEL
+        _miUpdateCarModel?.isVisible = fragmentType==NamesOfFragment.CARMODEL
+        _miDeleteCarModel?.isVisible = fragmentType==NamesOfFragment.CARMODEL
+        _miAppendCatalog?.isVisible = fragmentType==NamesOfFragment.CATALOG
+        _miUpdateCatalog?.isVisible = fragmentType==NamesOfFragment.CATALOG
+        _miDeleteCatalog?.isVisible = fragmentType==NamesOfFragment.CATALOG
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -109,15 +109,15 @@ class MainActivity : AppCompatActivity(), ActivityCallbacks {
                 CarModelFragment.getInstance().delete()
                 true
             }
-            R.id.miNewGroup -> {
+            R.id.miNewCatalog -> {
                 CatalogFragment.getInstance().append()
                 true
             }
-            R.id.miUpdateGroup -> {
+            R.id.miUpdateCatalog -> {
                 CatalogFragment.getInstance().update()
                 true
             }
-            R.id.miDeleteGroup -> {
+            R.id.miDeleteCatalog -> {
                 CatalogFragment.getInstance().delete()
                 true
             }
@@ -165,7 +165,7 @@ class MainActivity : AppCompatActivity(), ActivityCallbacks {
                     .commit()
             }
             NamesOfFragment.SPAREPART -> {
-                if (catalogViewModel.group != null && sparepart != null) {
+                if (catalogViewModel.catalog != null && sparepart != null) {
                     supportFragmentManager
                         .beginTransaction()
                         .replace(R.id.fcvMain, SparePartInfoFragment.newInstance(sparepart))

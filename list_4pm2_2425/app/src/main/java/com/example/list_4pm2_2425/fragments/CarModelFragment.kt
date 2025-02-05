@@ -99,8 +99,8 @@ class CarModelFragment : Fragment(), MainActivity.Edit {
 
 
 
-        viewModel.facultyList.observe(viewLifecycleOwner){
-            binding.rvCarModel.adapter=FacultyAdapter(it?:emptyList())
+        viewModel.CarModelList.observe(viewLifecycleOwner){
+            binding.rvCarModel.adapter=CarModelAdapter(it?:emptyList())
         }
     }
 
@@ -113,18 +113,18 @@ class CarModelFragment : Fragment(), MainActivity.Edit {
     }
 
 
-    private inner class FacultyAdapter(private val items: List<CarModel>)
-        : RecyclerView.Adapter<FacultyAdapter.ItemHolder>() {
+    private inner class CarModelAdapter(private val items: List<CarModel>)
+        : RecyclerView.Adapter<CarModelAdapter.ItemHolder>() {
 
         override fun onCreateViewHolder(
             parent: ViewGroup,
             viewType: Int
-        ): FacultyAdapter.ItemHolder{
+        ): CarModelAdapter.ItemHolder{
             val view = layoutInflater.inflate(R.layout.element_carmodel_list, parent, false)
             return ItemHolder(view)
         }
         override fun getItemCount(): Int = items.size
-        override fun onBindViewHolder(holder: FacultyAdapter.ItemHolder, position: Int) {
+        override fun onBindViewHolder(holder: CarModelAdapter.ItemHolder, position: Int) {
             holder.bind(items[position])
         }
 
@@ -147,21 +147,21 @@ class CarModelFragment : Fragment(), MainActivity.Edit {
 
         private inner class ItemHolder(view: View)
             : RecyclerView.ViewHolder(view) {
-                private lateinit var faculty : CarModel
+                private lateinit var carModel : CarModel
 
-                fun bind(faculty : CarModel) {
-                    this.faculty=faculty
+                fun bind(carModel : CarModel) {
+                    this.carModel=carModel
                     val tv = itemView.findViewById<TextView>(R.id.tvCarModel)
-                    tv.text=faculty.name
+                    tv.text=carModel.name
 
 
                     val cl = View.OnClickListener {
                         if (isAuthorized) {
                             // Можно редактировать
-                            editFaculty(faculty.name)
+                            editCarModel(carModel.name)
                         } else {
                             // Только просмотр
-                            viewModel.setCurrentFaculty(faculty)
+                            viewModel.setCurrentCarModel(carModel)
                         }
                        // viewModel.setCurrentFaculty(faculty)
                         //updateCurrentView(itemView)
@@ -173,7 +173,7 @@ class CarModelFragment : Fragment(), MainActivity.Edit {
 
                         ContextCompat.getColor(requireContext(), R.color.white))
 
-                    if (faculty==viewModel.faculty)
+                    if (carModel==viewModel.carModel)
 
 
 
@@ -193,11 +193,11 @@ class CarModelFragment : Fragment(), MainActivity.Edit {
         }
 
     override fun append() {
-        editFaculty()
+        editCarModel()
     }
 
     override fun update() {
-        editFaculty(viewModel.faculty?.name ?: "")
+        editCarModel(viewModel.carModel?.name ?: "")
     }
 
     override fun delete() {
@@ -211,9 +211,9 @@ class CarModelFragment : Fragment(), MainActivity.Edit {
         }
         AlertDialog.Builder(requireContext())
             .setTitle("Удаление!")
-            .setMessage("Вы действительно хотите удалить модель авто ${viewModel.faculty?.name ?: ""}?")
+            .setMessage("Вы действительно хотите удалить модель авто ${viewModel.carModel?.name ?: ""}?")
             .setPositiveButton("ДА") {_, _ ->
-                viewModel.deleteFaculty()
+                viewModel.deleteCarModel()
             }
             .setNegativeButton("НЕТ", null)
             .setCancelable(true)
@@ -221,7 +221,7 @@ class CarModelFragment : Fragment(), MainActivity.Edit {
             .show()
     }
 
-    private fun editFaculty(facultyName: String=""){
+    private fun editCarModel(carModelName: String=""){
         if (!isUserAuthorized()) {
             Toast.makeText(requireContext(), "Требуется авторизация для изменения модели", Toast.LENGTH_SHORT).show()
             return
@@ -229,7 +229,7 @@ class CarModelFragment : Fragment(), MainActivity.Edit {
         val mDialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_string, null)
         val messageText = mDialogView.findViewById<TextView>(R.id.tvInfo)
         val inputString = mDialogView.findViewById<EditText>(R.id.etString)
-        inputString.setText(facultyName)
+        inputString.setText(carModelName)
         messageText.text="Укажите модель автомобиля"
 
         AlertDialog.Builder(requireContext())
@@ -238,10 +238,10 @@ class CarModelFragment : Fragment(), MainActivity.Edit {
             .setPositiveButton("подтверждаю") {_, _ ->
                 Log.d("Info", inputString.text.toString())
                 if (inputString.text.isNotBlank()){
-                    if (facultyName.isBlank())
-                        viewModel.appendFaculty(inputString.text.toString())
+                    if (carModelName.isBlank())
+                        viewModel.appendCarModel(inputString.text.toString())
                     else
-                        viewModel.updateFaculty(inputString.text.toString())
+                        viewModel.updateCarModel(inputString.text.toString())
                 }
             }
             .setNegativeButton("отмена", null)

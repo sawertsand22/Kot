@@ -10,19 +10,19 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import com.example.list_4pm2_2425.R
 import com.example.list_4pm2_2425.data.Sparepart
-import com.example.list_4pm2_2425.databinding.FragmentStudentInfoBinding
+import com.example.list_4pm2_2425.databinding.FragmentSparepartInfoBinding
 import com.example.list_4pm2_2425.repository.AppRepository
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.text.SimpleDateFormat
 import android.content.Context
 
-private const val ARG_PARAM1 = "student_param"
+private const val ARG_PARAM1 = "sparepart_param"
 
 class SparePartInfoFragment : Fragment() {
 
     private lateinit var sparepart: Sparepart
-    private lateinit var _binding: FragmentStudentInfoBinding
+    private lateinit var _binding: FragmentSparepartInfoBinding
     val binding get() = _binding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,7 +49,7 @@ class SparePartInfoFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentStudentInfoBinding.inflate(inflater, container, false)
+        _binding = FragmentSparepartInfoBinding.inflate(inflater, container, false)
 
         // Проверка, авторизован ли пользователь
         val isAuthorized = isUserAuthorized()
@@ -99,7 +99,7 @@ class SparePartInfoFragment : Fragment() {
 
         // Обработчик кнопки сохранения
         binding.btnSave.setOnClickListener {
-            saveStudentData()
+            saveSparePartData()
         }
 
         return binding.root
@@ -123,7 +123,7 @@ class SparePartInfoFragment : Fragment() {
         binding.cwProductionDate.isEnabled = isEnabled
     }
 
-    private fun saveStudentData() {
+    private fun saveSparePartData() {
         // Сохраняем данные студента в репозитории
         sparepart.numberCatalog = binding.etNumberCatalog.text.toString()
         sparepart.sparePartName = binding.etFirstName.text.toString()
@@ -132,7 +132,7 @@ class SparePartInfoFragment : Fragment() {
         sparepart.quantity = binding.etQuality.text.toString()
         sparepart.count_part = binding.etCount.text.toString()
 
-        AppRepository.getInstance().updateStudent(sparepart)
+        AppRepository.getInstance().updateSparePart(sparepart)
         requireActivity().onBackPressedDispatcher.onBackPressed()
     }
 }

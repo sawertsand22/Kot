@@ -36,7 +36,7 @@ class CatalogFragment : Fragment(), MainActivity.Edit {
         private var INSTANCE: CatalogFragment? = null
         fun getInstance(): CatalogFragment {
             if (INSTANCE == null) INSTANCE = CatalogFragment()
-            return INSTANCE ?: throw Exception("GroupFragment не создан")
+            return INSTANCE ?: throw Exception("CatalogFragment не создан")
         }
 
         fun newInstance(): CatalogFragment {
@@ -68,7 +68,7 @@ class CatalogFragment : Fragment(), MainActivity.Edit {
         return binding.root
     }
 
-    private inner class GroupPageAdapter(
+    private inner class CatalogPageAdapter(
         fa: FragmentActivity,
         private val catalogs: List<Catalog>
     ) : FragmentStateAdapter(fa) {
@@ -89,12 +89,12 @@ class CatalogFragment : Fragment(), MainActivity.Edit {
         val isAuthorized = isUserAuthorized()
         updBtn()
         // Наблюдение за изменениями в списке групп
-        viewModel.catalogList.observe(viewLifecycleOwner) { groupList ->
-            createUI(groupList)
+        viewModel.catalogList.observe(viewLifecycleOwner) { catalogList ->
+            createUI(catalogList)
 
-            if (groupList.isNotEmpty()) {
-                val selectedGroup = groupList[tabPosition]
-                sparePartsViewModel.set_Group(selectedGroup)
+            if (catalogList.isNotEmpty()) {
+                val selectedCatalog = catalogList[tabPosition]
+                sparePartsViewModel.set_Catalog(selectedCatalog)
             }
 
         }
@@ -115,7 +115,7 @@ class CatalogFragment : Fragment(), MainActivity.Edit {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(s: Editable?) {
-                sparePartsViewModel.filterStudentsByName(s.toString()) // Изменено: вызов метода фильтрации
+                sparePartsViewModel.filterSparePartsByName(s.toString()) // Изменено: вызов метода фильтрации
             }
         })
 
@@ -137,7 +137,7 @@ class CatalogFragment : Fragment(), MainActivity.Edit {
            // showSortDialog()
           //  true
        // }
-        activityCallback?.newTitle(viewModel.faculty?.name ?: "")
+        activityCallback?.newTitle(viewModel.carModel?.name ?: "")
 
 
 
@@ -219,63 +219,63 @@ class CatalogFragment : Fragment(), MainActivity.Edit {
 
 
     private fun createUI(catalogList: List<Catalog>) {
-        binding.tlGroups.clearOnTabSelectedListeners()
-        binding.tlGroups.removeAllTabs()
+        binding.tlCatalogs.clearOnTabSelectedListeners()
+        binding.tlCatalogs.removeAllTabs()
 
 
-        catalogList.forEach { group ->
-            binding.tlGroups.addTab(binding.tlGroups.newTab().apply { text = group.name })
+        catalogList.forEach { catalog ->
+            binding.tlCatalogs.addTab(binding.tlCatalogs.newTab().apply { text = catalog.name })
         }
 
 
-        val adapter = GroupPageAdapter(requireActivity(), catalogList)
+        val adapter = CatalogPageAdapter(requireActivity(), catalogList)
         binding.vpSpareParts.adapter = adapter
-        TabLayoutMediator(binding.tlGroups, binding.vpSpareParts) { tab, pos ->
+        TabLayoutMediator(binding.tlCatalogs, binding.vpSpareParts) { tab, pos ->
             tab.text = catalogList[pos].name
         }.attach()
 
         // Сохранение позиции
-        tabPosition = viewModel.getGroupListPosition.coerceAtLeast(0)
-        viewModel.setCurrentGroup(tabPosition)
-        binding.tlGroups.selectTab(binding.tlGroups.getTabAt(tabPosition), true)
+        tabPosition = viewModel.getCatalogListPosition.coerceAtLeast(0)
+        viewModel.setCurrentCatalog(tabPosition)
+        binding.tlCatalogs.selectTab(binding.tlCatalogs.getTabAt(tabPosition), true)
 
 
-        binding.tlGroups.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+        binding.tlCatalogs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 tabPosition = tab?.position!!
-                viewModel.setCurrentGroup(catalogList[tabPosition])
+                viewModel.setCurrentCatalog(catalogList[tabPosition])
 
                 //sparePartsViewModel.set_Group(groupList[tabPosition])
 
-                val selectedGroup = catalogList[tabPosition]
-                sparePartsViewModel.set_Group(selectedGroup)
+                val selectedCatalog = catalogList[tabPosition]
+                sparePartsViewModel.set_Catalog(selectedCatalog)
             }
 
             override fun onTabUnselected(tab: TabLayout.Tab?) {}
             override fun onTabReselected(tab: TabLayout.Tab?) {
-                sortGroups()
+                sortCatalogs()
             }
         })
     }
 
-    private fun searchGroups(query: String) {
-        val filteredGroups = viewModel.catalogList.value?.filter {
-            it.name.contains(query, ignoreCase = true)
-        } ?: emptyList()
-        createUI(filteredGroups)
-    }
+//    private fun searchGroups(query: String) {
+//        val filteredGroups = viewModel.catalogList.value?.filter {
+//            it.name.contains(query, ignoreCase = true)
+//        } ?: emptyList()
+//        createUI(filteredGroups)
+//    }
 
-    private fun sortGroups() {
-        val sortedGroups = viewModel.catalogList.value?.sortedBy { it.name } ?: emptyList()
-        createUI(sortedGroups)
+    private fun sortCatalogs() {
+        val sortedCatalogs = viewModel.catalogList.value?.sortedBy { it.name } ?: emptyList()
+        createUI(sortedCatalogs)
     }
 
     override fun append() {
-        editGroup()
+        editCatalog()
     }
 
     override fun update() {
-        editGroup(viewModel.group?.name ?: "")
+        editCatalog(viewModel.catalog?.name ?: "")
     }
 
     override fun delete() {
@@ -287,12 +287,12 @@ class CatalogFragment : Fragment(), MainActivity.Edit {
             Toast.makeText(requireContext(), "Требуется авторизация для изменения модели", Toast.LENGTH_SHORT).show()
             return
         }
-        if (viewModel.group == null) return
+        if (viewModel.catalog == null) return
         AlertDialog.Builder(requireContext())
             .setTitle("Удаление!")
-            .setMessage("Вы действительно хотите удалить группу ${viewModel.group?.name ?: ""}?")
+            .setMessage("Вы действительно хотите удалить группу ${viewModel.catalog?.name ?: ""}?")
             .setPositiveButton("ДА") { _, _ ->
-                viewModel.deleteGroup()
+                viewModel.deleteCatalog()
             }
             .setNegativeButton("НЕТ", null)
             .setCancelable(true)
@@ -300,7 +300,7 @@ class CatalogFragment : Fragment(), MainActivity.Edit {
             .show()
     }
 
-    private fun editGroup(groupName: String = "") {
+    private fun editCatalog(catalogName: String = "") {
         if (!isUserAuthorized()) {
             Toast.makeText(requireContext(), "Требуется авторизация для изменения модели", Toast.LENGTH_SHORT).show()
             return
@@ -308,7 +308,7 @@ class CatalogFragment : Fragment(), MainActivity.Edit {
         val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_string, null)
         val messageText = dialogView.findViewById<TextView>(R.id.tvInfo)
         val inputString = dialogView.findViewById<EditText>(R.id.etString)
-        inputString.setText(groupName)
+        inputString.setText(catalogName)
         messageText.text = "Укажите наименование группы"
 
         AlertDialog.Builder(requireContext())
@@ -317,10 +317,10 @@ class CatalogFragment : Fragment(), MainActivity.Edit {
             .setPositiveButton("подтверждаю") { _, _ ->
                 Log.d("Info", inputString.text.toString())
                 if (inputString.text.isNotBlank()) {
-                    if (groupName.isBlank())
-                        viewModel.appendGroup(inputString.text.toString())
+                    if (catalogName.isBlank())
+                        viewModel.appendCatalog(inputString.text.toString())
                     else
-                        viewModel.updateGroup(inputString.text.toString())
+                        viewModel.updateCatalog(inputString.text.toString())
                 }
             }
             .setNegativeButton("отмена", null)

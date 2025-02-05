@@ -9,54 +9,54 @@ class CatalogViewModel : ViewModel() {
 
     var catalogList: MutableLiveData<List<Catalog>> = MutableLiveData()
     private var _catalog: Catalog? = null
-    val group
+    val catalog
         get()=_catalog
 
     init {
         AppRepository.getInstance().listOfCatalog.observeForever {
-            catalogList.postValue(AppRepository.getInstance().facultyGroups)
+            catalogList.postValue(AppRepository.getInstance().carModelCatalog)
         }
 
         AppRepository.getInstance().catalog.observeForever{
             _catalog=it
         }
 
-        AppRepository.getInstance().faculty.observeForever {
-            catalogList.postValue(AppRepository.getInstance().facultyGroups)
+        AppRepository.getInstance().carModel.observeForever {
+            catalogList.postValue(AppRepository.getInstance().carModelCatalog)
         }
     }
 
-    fun deleteGroup(){
-        if(group!=null)
-            AppRepository.getInstance().deleteGroup(group!!)
+    fun deleteCatalog(){
+        if(catalog!=null)
+            AppRepository.getInstance().deleteCatalog(catalog!!)
     }
 
-    fun appendGroup(groupName: String){
+    fun appendCatalog(catalogName: String){
         val catalog=Catalog()
-        catalog.name=groupName
-        catalog.carModelID=faculty?.id
-        AppRepository.getInstance().updateGroup(catalog)
+        catalog.name=catalogName
+        catalog.carModelID=carModel?.id
+        AppRepository.getInstance().updateCatalog(catalog)
     }
 
-    fun updateGroup(groupName: String){
+    fun updateCatalog(catalogName: String){
         if(_catalog!=null){
-            _catalog!!.name=groupName
-            AppRepository.getInstance().updateGroup(_catalog!!)
+            _catalog!!.name=catalogName
+            AppRepository.getInstance().updateCatalog(_catalog!!)
         }
     }
 
-    fun setCurrentGroup(position: Int){
+    fun setCurrentCatalog(position: Int){
         if ((catalogList.value?.size ?: 0) > position)
-            catalogList.value?.let { AppRepository.getInstance().setCurrentGroup(it.get(position))}
+            catalogList.value?.let { AppRepository.getInstance().setCurrentCatalog(it.get(position))}
     }
 
-    fun setCurrentGroup(catalog: Catalog){
-        AppRepository.getInstance().setCurrentGroup(catalog)
+    fun setCurrentCatalog(catalog: Catalog){
+        AppRepository.getInstance().setCurrentCatalog(catalog)
     }
 
-    val getGroupListPosition
-        get()=catalogList.value?.indexOfFirst { it.id==group?.id } ?: -1
+    val getCatalogListPosition
+        get()=catalogList.value?.indexOfFirst { it.id==catalog?.id } ?: -1
 
-    val faculty
-        get()=AppRepository.getInstance().faculty.value
+    val carModel
+        get()=AppRepository.getInstance().carModel.value
 }

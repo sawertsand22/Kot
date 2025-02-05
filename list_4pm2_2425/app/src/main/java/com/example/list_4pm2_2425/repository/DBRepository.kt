@@ -17,14 +17,14 @@ interface DBRepository{
 
 
     fun getAllCatalogs(): Flow<List<Catalog>>
-    fun getFacultyCatalogs(carModelID: UUID): Flow<List<Catalog>>
+    fun getCarModelCatalogs(carModelID: UUID): Flow<List<Catalog>>
     suspend fun insertCatalog(catalog: Catalog)
     suspend fun deleteCatalog(catalog: Catalog)
     suspend fun deleteAllCatalogs()
 
 
     fun getAllSpareparts() : Flow<List<Sparepart>>
-    fun getGroupSpareparts(catalogID: UUID) : Flow<List<Sparepart>>
+    fun getCatalogSpareparts(catalogID: UUID) : Flow<List<Sparepart>>
     suspend fun insertSparepart(sparepart: Sparepart)
     suspend fun deleteSparepart(sparepart: Sparepart)
     suspend fun deleteAllSpareparts()
