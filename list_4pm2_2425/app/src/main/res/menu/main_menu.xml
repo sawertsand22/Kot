@@ -4,13 +4,13 @@
 
     <item
         android:id="@+id/miNewCatalog"
-        android:title="Добавить группу" />
+        android:title="Добавить каталог" />
     <item
         android:id="@+id/miUpdateCatalog"
-        android:title="Изменить группу" />
+        android:title="Изменить каталог" />
     <item
         android:id="@+id/miDeleteCatalog"
-        android:title="Удалить группу" />
+        android:title="Удалить каталог" />
     <item
         android:id="@+id/miNewCarModel"
         android:icon="@android:drawable/btn_star_big_on"

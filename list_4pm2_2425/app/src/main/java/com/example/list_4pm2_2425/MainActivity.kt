@@ -1,8 +1,12 @@
 package com.example.list_4pm2_2425
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.widget.Button
+import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -34,6 +38,19 @@ class MainActivity : AppCompatActivity(), ActivityCallbacks {
         setContentView(R.layout.activity_main)
         checkUserState()
 
+//        supportFragmentManager.addOnBackStackChangedListener {
+//            // Обновляем кнопки авторизации при изменении back stack
+//            updateAuthButtons()
+//        }
+
+
+
+
+
+
+
+
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -52,6 +69,9 @@ class MainActivity : AppCompatActivity(), ActivityCallbacks {
                     NamesOfFragment.CATALOG ->{
                         activeFragment=NamesOfFragment.CARMODEL
                     }
+                    NamesOfFragment.REGISTER ->{
+                        activeFragment=NamesOfFragment.CARMODEL
+                    }
                     else -> {
                         activeFragment=NamesOfFragment.CATALOG
                     }
@@ -63,6 +83,11 @@ class MainActivity : AppCompatActivity(), ActivityCallbacks {
             }
         }
     }
+
+
+
+
+
     var activeFragment: NamesOfFragment = NamesOfFragment.CARMODEL
 
     private var _miAppendCarModel: MenuItem? = null
@@ -125,6 +150,44 @@ class MainActivity : AppCompatActivity(), ActivityCallbacks {
         }
     }
 
+    private fun showAuthButtons(isVisible: Boolean) {
+        val btnLogin = findViewById<Button>(R.id.btnLogin)
+        val btnLogout = findViewById<Button>(R.id.btnLogout)
+
+        if (isVisible) {
+            updateAuthButtons() // Проверяем авторизацию и обновляем кнопки
+        } else {
+            btnLogin.visibility = View.GONE
+            btnLogout.visibility = View.GONE
+        }
+
+        btnLogin.setOnClickListener {
+            showFragment(NamesOfFragment.REGISTER) // Переход на экран регистрации
+        }
+
+        btnLogout.setOnClickListener {
+            SessionManager.saveUserState(this, false) // Выход из аккаунта
+            updateAuthButtons()
+            Toast.makeText(this, "Вы вышли из аккаунта", Toast.LENGTH_SHORT).show()
+
+        }
+    }
+
+
+    private fun updateAuthButtons() {
+        val btnLogin = findViewById<Button>(R.id.btnLogin)
+        val btnLogout = findViewById<Button>(R.id.btnLogout)
+        val isAuthorized = SessionManager.isUserAuthorized(this)
+
+        btnLogin.visibility = if (isAuthorized) View.GONE else View.VISIBLE
+        btnLogout.visibility = if (isAuthorized) View.VISIBLE else View.GONE
+    }
+
+
+
+
+
+
     override fun onDestroy() {
         super.onDestroy()
     }
@@ -142,6 +205,8 @@ class MainActivity : AppCompatActivity(), ActivityCallbacks {
                     .replace(R.id.fcvMain, CarModelFragment.getInstance())
                     .addToBackStack(null)
                     .commit()
+                showAuthButtons(true) // Показываем кнопки только здесь
+                updateAuthButtons()
             }
             NamesOfFragment.CATALOG -> {
                 supportFragmentManager
@@ -149,6 +214,7 @@ class MainActivity : AppCompatActivity(), ActivityCallbacks {
                     .replace(R.id.fcvMain, CatalogFragment.newInstance())
                     .addToBackStack(null)
                     .commit()
+                showAuthButtons(false) // Скрываем кнопки
             }
             NamesOfFragment.LOGIN -> {
                 supportFragmentManager
@@ -156,6 +222,7 @@ class MainActivity : AppCompatActivity(), ActivityCallbacks {
                     .replace(R.id.fcvMain, LoginFragment())
                     .addToBackStack(null)
                     .commit()
+                showAuthButtons(false) // Скрываем кнопки
             }
             NamesOfFragment.REGISTER -> {
                 supportFragmentManager
@@ -163,6 +230,8 @@ class MainActivity : AppCompatActivity(), ActivityCallbacks {
                     .replace(R.id.fcvMain, RegisterFragment())
                     .addToBackStack(null)
                     .commit()
+                showAuthButtons(false) // Скрываем кнопки
+
             }
             NamesOfFragment.SPAREPART -> {
                 if (catalogViewModel.catalog != null && sparepart != null) {
@@ -171,11 +240,13 @@ class MainActivity : AppCompatActivity(), ActivityCallbacks {
                         .replace(R.id.fcvMain, SparePartInfoFragment.newInstance(sparepart))
                         .addToBackStack(null)
                         .commit()
+                    showAuthButtons(false) // Скрываем кнопки
                 }
             }
         }
         activeFragment = fragmentType
         updateMenu(fragmentType)
+
     }
 
     private fun checkUserState() {
@@ -190,5 +261,6 @@ class MainActivity : AppCompatActivity(), ActivityCallbacks {
             .replace(R.id.fcvMain, fragment)
             .commit()
     }
+
 
 }

@@ -43,6 +43,7 @@ class SparePartsFragment : Fragment() {
     private lateinit var sparePartAdapter: SparePartAdapter  // Объявляем адаптер
     private lateinit var viewModel: SparePartsViewModel
 
+
     private lateinit var _binding: FragmentSparepartsBinding
     val binding
         get()=_binding
@@ -62,33 +63,59 @@ class SparePartsFragment : Fragment() {
         _binding = FragmentSparepartsBinding.inflate(inflater, container, false)
         binding.rvSpareParts.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+
+
+
         return binding.root
         //return inflater.inflate(R.layout.fragment_students, container, false)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(this).get(SparePartsViewModel::class.java)
-        viewModel.set_Catalog(catalog)
+//    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+//        super.onViewCreated(view, savedInstanceState)
+//        viewModel = ViewModelProvider(this).get(SparePartsViewModel::class.java)
+//        viewModel.set_Catalog(catalog)
+//
+//        Log.d("RecyclerViewDebug до кода", "Adapter attached: ${binding.rvSpareParts.adapter != null}")
+//
+//        sparePartAdapter = SparePartAdapter(emptyList()) // Инициализируем адаптер ПУСТЫМ списком
+//        binding.rvSpareParts.adapter = sparePartAdapter
+//        Log.d("RecyclerViewDebug пссле кода ", "Adapter attached: ${binding.rvSpareParts.adapter != null}")
+//
+//
+//        viewModel.sparepartList.observe(viewLifecycleOwner) { spareparts ->
+//            Log.d("FragmentObserve", "SparePart list updated in fragment: ${spareparts.size}, first item: ${spareparts.firstOrNull()?.sparePartName}")
+//            sparePartAdapter.updateData(spareparts)
+//                //sparePartAdapter = SparePartAdapter(spareparts)  // ⬅️ Создаем новый адаптер
+//            //binding.rvSpareParts.adapter = sparePartAdapter  // ⬅️ Присваиваем заново
+//                // binding.rvSpareParts.adapter?.notifyDataSetChanged()  // ⬅️ Принудительное обновление
+//            binding.rvSpareParts.requestLayout()
+//        }
+//            //binding.rvSpareParts.adapter?.notifyDataSetChanged()
+//
+//        binding.fabAppendSparePart.setOnClickListener {
+//            editSparePart(Sparepart().apply { catalogID = viewModel.catalog?.id })
+//        }
+//    }
+override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+    viewModel = ViewModelProvider(this).get(SparePartsViewModel::class.java)
+    viewModel.set_Catalog(catalog)
 
-        sparePartAdapter = SparePartAdapter(emptyList()) // Инициализируем адаптер ПУСТЫМ списком
-        binding.rvSpareParts.adapter = sparePartAdapter
+    // Инициализация адаптера ПУСТЫМ списком
+    sparePartAdapter = SparePartAdapter(emptyList())
+    binding.rvSpareParts.adapter = sparePartAdapter
 
-
-        viewModel.sparepartList.observe(viewLifecycleOwner) { spareparts ->
-            Log.d("FragmentObserve", "SparePart list updated in fragment: ${spareparts.size}, first item: ${spareparts.firstOrNull()?.sparePartName}")
-            if (spareparts != null) {
-                Log.d("FragmentObserve", "SparePart list is not null")
-                sparePartAdapter.updateData(spareparts)
-            } else {
-                Log.d("FragmentObserve", "SparePart list is null")
-            }
-        }
-
-        binding.fabAppendSparePart.setOnClickListener {
-            editSparePart(Sparepart().apply { catalogID = viewModel.catalog?.id })
-        }
+    // Наблюдение за LiveData
+    viewModel.sparepartList.observe(viewLifecycleOwner) { spareparts ->
+        Log.d("FragmentObserve", "SparePart list updated in fragment: ${spareparts.size}, first item: ${spareparts.firstOrNull()?.sparePartName}")
+        sparePartAdapter.updateData(spareparts)  // Обновляем существующий адаптер
+        binding.rvSpareParts.requestLayout()
     }
+
+    binding.fabAppendSparePart.setOnClickListener {
+        editSparePart(Sparepart().apply { catalogID = viewModel.catalog?.id })
+    }
+}
 
     private fun isUserAuthorized(): Boolean {
         val sharedPrefs = requireContext().getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
@@ -140,29 +167,15 @@ class SparePartsFragment : Fragment() {
 
         fun updateData(newItems: List<Sparepart>) {
             // 1. Создаем новый список для элементов RecyclerView
-            val newList = newItems.map { it.copy() } // Глубокое копирование
+            //val newList = newItems.map { it.copy() } // Глубокое копирование
 
-            // 2. Сравниваем старый и новый списки с помощью DiffUtil
-            val diffResult = DiffUtil.calculateDiff(object : DiffUtil.Callback() {
-                override fun getOldListSize(): Int = items.size
-                override fun getNewListSize(): Int = newList.size
+            items = newItems
+            notifyDataSetChanged() // Принудительное обновление всего списка
 
-                override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-                    val oldItem = items[oldItemPosition]
-                    val newItem = newList[newItemPosition]
-                    return oldItem.id == newItem.id // Сравниваем ID
-                }
-
-                override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-                    val oldItem = items[oldItemPosition]
-                    val newItem = newList[newItemPosition]
-                    return oldItem == newItem // Сравниваем содержимое (можно заменить на более точное сравнение полей)
-                }
-            })
 
             // 3. Обновляем список items и применяем изменения с помощью DiffUtil
-            items = newList // Присваиваем НОВЫЙ список
-            diffResult.dispatchUpdatesTo(this)
+            //items = newList // Присваиваем НОВЫЙ список
+
         }
 
 
@@ -174,7 +187,9 @@ class SparePartsFragment : Fragment() {
         override fun getItemCount(): Int = items.size
 
         override fun onBindViewHolder(holder: ItemHolder, position: Int) {
+            Log.d("RecyclerViewDebug", "Binding item: ${items[position].sparePartName}")
             holder.bind(items[position])
+            Log.d("RecyclerViewDebug", "Binding item: ${items[position].sparePartName}")
         }
 
         private var lastView: View? = null

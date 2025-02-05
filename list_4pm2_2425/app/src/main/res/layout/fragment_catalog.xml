@@ -77,7 +77,8 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/btnLogout"
         app:layout_constraintTop_toBottomOf="@+id/vpSpareParts"
-        app:layout_constraintVertical_bias="0.5" />
+        app:layout_constraintVertical_bias="0.5"
+        tools:visibility="visible" />
 
     <Button
         android:id="@+id/btnLogout"
@@ -89,5 +90,6 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/vpSpareParts"
-        app:layout_constraintVertical_bias="0.506" />
+        app:layout_constraintVertical_bias="0.506"
+        tools:visibility="visible" />
 </androidx.constraintlayout.widget.ConstraintLayout>

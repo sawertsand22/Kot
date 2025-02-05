@@ -35,8 +35,14 @@ class CatalogFragment : Fragment(), MainActivity.Edit {
     companion object {
         private var INSTANCE: CatalogFragment? = null
         fun getInstance(): CatalogFragment {
-            if (INSTANCE == null) INSTANCE = CatalogFragment()
-            return INSTANCE ?: throw Exception("CatalogFragment не создан")
+            val existingFragment = INSTANCE
+            if (existingFragment != null) {
+                return existingFragment
+            }
+
+            val newFragment = CatalogFragment()
+            INSTANCE = newFragment
+            return newFragment
         }
 
         fun newInstance(): CatalogFragment {
@@ -115,9 +121,20 @@ class CatalogFragment : Fragment(), MainActivity.Edit {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(s: Editable?) {
+                Log.d("SearchDebug", "Search query: ${s.toString()}")
                 sparePartsViewModel.filterSparePartsByName(s.toString()) // Изменено: вызов метода фильтрации
+               // sparePartsViewModel.sparepartList.postValue()
             }
         })
+
+
+//   ИЗ СПАРЕПАРТ ФРАГМЕНТ     viewModel.sparepartList.observe(viewLifecycleOwner) { spareparts ->
+//            Log.d("FragmentObserve", "SparePart list updated in fragment: ${spareparts.size}, first item: ${spareparts.firstOrNull()?.sparePartName}")
+//            sparePartAdapter.updateData(spareparts)  // Обновляем существующий адаптер
+//            binding.rvSpareParts.requestLayout()
+//        }
+
+
 
 
         btnLoginRegister = view.findViewById(R.id.btnLoginRegister)

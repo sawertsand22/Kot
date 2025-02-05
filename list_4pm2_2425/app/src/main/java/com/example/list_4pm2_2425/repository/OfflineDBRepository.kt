@@ -1,5 +1,6 @@
 package com.example.list_4pm2_2425.repository
 
+import android.icu.text.StringSearch
 import com.example.list_4pm2_2425.data.CarModel
 //import com.example.list_4pm2_2425.data.Faculty
 import com.example.list_4pm2_2425.data.Catalog
@@ -67,7 +68,7 @@ class OfflineDBRepository(val dao: ListDAO): DBRepository {
 
 
 
-    override fun getAllSpareparts(): Flow<List<Sparepart>> = dao.getAllSparepart()
+    override fun getAllSpareparts(search: String): Flow<List<Sparepart>> = dao.getAllSparepart(search)
     override fun getCatalogSpareparts(catalogID: UUID): Flow<List<Sparepart>> = dao.getCatalogSparepart(catalogID)
     override suspend fun insertSparepart(sparepart: Sparepart) = dao.insertSparepart(sparepart)
     override suspend fun deleteSparepart(sparepart: Sparepart) = dao.deleteSparepart(sparepart)

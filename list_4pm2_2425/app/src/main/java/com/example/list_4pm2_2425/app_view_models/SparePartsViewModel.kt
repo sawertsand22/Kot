@@ -18,8 +18,17 @@ class SparePartsViewModel : ViewModel() {
     fun set_Catalog(catalog: Catalog){
         this.catalog = catalog
         AppRepository.getInstance().listOfSparepart.observeForever { catalogs ->
-            allSpareparts = AppRepository.getInstance().getCatalogSpareParts(catalog.id) // Инициализируем исходный список
-            sparepartList.postValue(allSpareparts) // Изначально отображаем полный список
+            if (sparepartList.value.isNullOrEmpty()) {
+                allSpareparts = AppRepository.getInstance().getCatalogSpareParts(catalog.id)
+                Log.d("SparePartsDebug", "All spare parts loaded: ${allSpareparts.size}")
+                sparepartList.value = allSpareparts
+            }
+           // allSpareparts = AppRepository.getInstance().getCatalogSpareParts(catalog.id) // Инициализируем исходный список
+
+
+
+         //   Log.d("SparePartsDebug", "All spare parts reloaded: ${allSpareparts.size}")
+           // sparepartList.postValue(allSpareparts) // Изначально отображаем полный список
         }
         AppRepository.getInstance().sparepart.observeForever{
             _sparepart = it
@@ -40,13 +49,16 @@ class SparePartsViewModel : ViewModel() {
         Log.d("FilterSpareParts", "Filtering by name: $name")
 
         val filteredList = allSpareparts.filter { // Фильтруем ИСХОДНЫЙ список!
+            Log.d("FilterSpareParts", "Checking: ${it.sparePartName} - Match: ${it.sparePartName.contains(name, ignoreCase = true)}")
             it.sparePartName.trim().contains(name, ignoreCase = true) ||
                     it.manufacturer.trim().contains(name, ignoreCase = true) ||
                     it.numberCatalog.trim().contains(name, ignoreCase = true)
         }
 
         Log.d("FilterSpareParts", "Filtered list size: ${filteredList.size}")
-        sparepartList.postValue(filteredList) // Обновляем LiveData ОТФИЛЬТРОВАННЫМ списком!
+        sparepartList.value = filteredList
+        // ⬅️ Меняем на value вместо postValue
+            //sparepartList.postValue(filteredList) // Обновляем LiveData ОТФИЛЬТРОВАННЫМ списком!
     }
 
 

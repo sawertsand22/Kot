@@ -1,5 +1,6 @@
 package com.example.list_4pm2_2425.database
 
+import android.icu.text.StringSearch
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -53,8 +54,8 @@ interface ListDAO {
 
 
 
-    @Query("select * from spareparts")
-    fun getAllSparepart(): Flow<List<Sparepart>>
+    @Query("select * from spareparts where sparePartName like '%' | :search | '%' or 1")
+    fun getAllSparepart(search: String = ""): Flow<List<Sparepart>>
 
     @Query("select * from spareparts where catalog_id=:catalogID")
     fun getCatalogSparepart(catalogID: UUID): Flow<List<Sparepart>>

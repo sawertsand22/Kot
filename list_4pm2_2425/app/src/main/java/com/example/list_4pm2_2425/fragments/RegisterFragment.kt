@@ -48,9 +48,7 @@ class RegisterFragment : Fragment() {
             Toast.makeText(context, "Registration successful", Toast.LENGTH_SHORT).show()
 
             // Переход на основной экран
-            activity?.supportFragmentManager?.beginTransaction()
-                ?.replace(R.id.fcvMain, CatalogFragment.getInstance())
-                ?.commit()
+            activity?.supportFragmentManager?.popBackStack()
         }
 
     }
