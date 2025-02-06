@@ -5,91 +5,51 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".fragments.CatalogFragment"
-    tools:layout_editor_absoluteX="-24dp"
-    tools:layout_editor_absoluteY="48dp">
+    tools:layout_editor_absoluteX="-1dp"
+    tools:layout_editor_absoluteY="0dp">
+
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tlCatalogs"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="411dp"
+        android:layout_height="99dp"
         app:layout_constraintBottom_toTopOf="@+id/vpSpareParts"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etSearch"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.5">
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Monday"
-            tools:layout_editor_absoluteX="-24dp"
-            tools:layout_editor_absoluteY="230dp" />
+            tools:layout_editor_absoluteX="-1dp"
+            tools:layout_editor_absoluteY="131dp" />
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Tuesday"
-            tools:layout_editor_absoluteX="-24dp"
-            tools:layout_editor_absoluteY="230dp" />
+            tools:layout_editor_absoluteX="-1dp"
+            tools:layout_editor_absoluteY="131dp" />
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Wednesday"
-            tools:layout_editor_absoluteX="-24dp"
-            tools:layout_editor_absoluteY="230dp" />
+            tools:layout_editor_absoluteX="-1dp"
+            tools:layout_editor_absoluteY="131dp" />
     </com.google.android.material.tabs.TabLayout>
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/vpSpareParts"
-        android:layout_width="412dp"
-        android:layout_height="381dp"
-        app:layout_constraintBottom_toTopOf="@+id/btnLoginRegister"
+        android:layout_width="415dp"
+        android:layout_height="595dp"
+        android:layout_marginTop="20dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tlCatalogs"
-        app:layout_constraintVertical_bias="0.5" />
+        app:layout_constraintTop_toBottomOf="@+id/tlCatalogs" />
 
-    <EditText
-        android:id="@+id/etSearch"
-        android:layout_width="314dp"
-        android:layout_height="48dp"
-        android:ems="10"
-        android:hint="Поиск"
-        android:inputType="text"
-        app:layout_constraintBottom_toTopOf="@+id/tlCatalogs"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.257"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.5" />
-
-
-    <Button
-        android:id="@+id/btnLoginRegister"
-        android:layout_width="242dp"
-        android:layout_height="47dp"
-        android:text="Войти / Зарегистрироваться"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/btnLogout"
-        app:layout_constraintTop_toBottomOf="@+id/vpSpareParts"
-        app:layout_constraintVertical_bias="0.5"
-        tools:visibility="visible" />
-
-    <Button
-        android:id="@+id/btnLogout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Выйти"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/btnLoginRegister"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/vpSpareParts"
-        app:layout_constraintVertical_bias="0.506"
-        tools:visibility="visible" />
 </androidx.constraintlayout.widget.ConstraintLayout>

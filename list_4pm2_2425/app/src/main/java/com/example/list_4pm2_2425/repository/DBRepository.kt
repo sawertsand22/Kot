@@ -29,4 +29,7 @@ interface DBRepository{
     suspend fun deleteSparepart(sparepart: Sparepart)
     suspend fun deleteAllSpareparts()
 
+
+    fun searchSparePartsInCatalog(catalogID: UUID, search: String): Flow<List<Sparepart>>
+
 }

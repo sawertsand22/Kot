@@ -38,6 +38,7 @@ class MainActivity : AppCompatActivity(), ActivityCallbacks {
         setContentView(R.layout.activity_main)
         checkUserState()
 
+
 //        supportFragmentManager.addOnBackStackChangedListener {
 //            // Обновляем кнопки авторизации при изменении back stack
 //            updateAuthButtons()
@@ -162,7 +163,7 @@ class MainActivity : AppCompatActivity(), ActivityCallbacks {
         }
 
         btnLogin.setOnClickListener {
-            showFragment(NamesOfFragment.REGISTER) // Переход на экран регистрации
+            showFragment(NamesOfFragment.LOGIN) // Переход на экран регистрации
         }
 
         btnLogout.setOnClickListener {
@@ -206,7 +207,9 @@ class MainActivity : AppCompatActivity(), ActivityCallbacks {
                     .addToBackStack(null)
                     .commit()
                 showAuthButtons(true) // Показываем кнопки только здесь
-                updateAuthButtons()
+                updateMenu(NamesOfFragment.CARMODEL)
+                // Обновляем меню сразу
+                invalidateOptionsMenu()
             }
             NamesOfFragment.CATALOG -> {
                 supportFragmentManager

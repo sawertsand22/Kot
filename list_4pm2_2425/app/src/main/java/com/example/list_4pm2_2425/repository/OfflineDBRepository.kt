@@ -74,4 +74,9 @@ class OfflineDBRepository(val dao: ListDAO): DBRepository {
     override suspend fun deleteSparepart(sparepart: Sparepart) = dao.deleteSparepart(sparepart)
     override suspend fun deleteAllSpareparts() = dao.deleteAllSparepart()
 
+    override fun searchSparePartsInCatalog(catalogID: UUID, search: String): Flow<List<Sparepart>> {
+        TODO("Not yet implemented")
+    }
+
+
 }

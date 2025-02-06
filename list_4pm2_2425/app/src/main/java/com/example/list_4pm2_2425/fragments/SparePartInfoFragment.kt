@@ -16,6 +16,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.text.SimpleDateFormat
 import android.content.Context
+import android.widget.Toast
 
 private const val ARG_PARAM1 = "sparepart_param"
 
@@ -105,6 +106,10 @@ class SparePartInfoFragment : Fragment() {
         return binding.root
     }
 
+
+
+
+
     private fun isUserAuthorized(): Boolean {
         // Проверка авторизации через SharedPreferences
         val sharedPrefs = requireContext().getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
@@ -124,6 +129,16 @@ class SparePartInfoFragment : Fragment() {
     }
 
     private fun saveSparePartData() {
+        if (binding.etFirstName.text.isNullOrBlank() ||
+            binding.etNumberCatalog.text.isNullOrBlank() ||
+            binding.etVIN.text.isNullOrBlank() ||
+            binding.etMiddleName.text.isNullOrBlank() ||
+            binding.etQuality.text.isNullOrBlank() ||
+            binding.etCount.text.isNullOrBlank()) {
+
+            Toast.makeText(requireContext(), "️ Заполните все поля!", Toast.LENGTH_SHORT).show()
+            return
+        }
         // Сохраняем данные студента в репозитории
         sparepart.numberCatalog = binding.etNumberCatalog.text.toString()
         sparepart.sparePartName = binding.etFirstName.text.toString()

@@ -3,6 +3,8 @@ package com.example.list_4pm2_2425.fragments
 import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -107,10 +109,22 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
     // Наблюдение за LiveData
     viewModel.sparepartList.observe(viewLifecycleOwner) { spareparts ->
-        Log.d("FragmentObserve", "SparePart list updated in fragment: ${spareparts.size}, first item: ${spareparts.firstOrNull()?.sparePartName}")
-        sparePartAdapter.updateData(spareparts)  // Обновляем существующий адаптер
-        binding.rvSpareParts.requestLayout()
+        Log.d("FragmentObserve", "Обновляем UI. Количество: ${spareparts.size}")
+        //updateRecyclerView(spareParts)
+        sparePartAdapter.updateData(spareparts)
+//        binding.rvSpareParts.requestLayout()
     }
+
+    binding.etSearch.addTextChangedListener(object : TextWatcher {
+        override fun afterTextChanged(s: Editable?) {
+            val query = s.toString().trim()
+            Log.d("SearchInput", "🔎 Поиск: $query")
+            viewModel.filterSparePartsByName(query)
+        }
+
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+    })
 
     binding.fabAppendSparePart.setOnClickListener {
         editSparePart(Sparepart().apply { catalogID = viewModel.catalog?.id })
@@ -122,15 +136,22 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         return sharedPrefs.getBoolean("isAuthorized", false)
     }
 
-    private fun deleteDialog(){
+    private fun deleteDialog(sparepart: Sparepart) {
+        Log.d("DeleteDialog", "⚡️ Открываем диалог удаления!")
+
         if (!isUserAuthorized()) {
-            Toast.makeText(requireContext(), "Требуется авторизация для изменения модели", Toast.LENGTH_SHORT).show()
+            Log.d("DeleteDialog", "❌ Ошибка: пользователь не авторизован!")
+            Toast.makeText(requireContext(), "Требуется авторизация", Toast.LENGTH_SHORT).show()
             return
         }
+
         AlertDialog.Builder(requireContext())
             .setTitle("Удаление")
-            .setMessage("Вы действительно хотите удалить запчасть ${viewModel.sparePart?.manufacturer ?: ""}?")
-            .setPositiveButton("Да"){_, _ ->
+            .setMessage("Удалить запчасть ${sparepart.sparePartName}?")
+            .setPositiveButton("Да") { _, _ ->
+                Log.d("DeleteDialog", "✅ Нажали 'Да', запускаем удаление")
+
+                viewModel.setCurrentSparePart(sparepart) // 🔥 Устанавливаем текущую запчасть
                 viewModel.deleteSparePart()
             }
             .setNegativeButton("Нет", null)
@@ -138,6 +159,9 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
             .create()
             .show()
     }
+
+
+
 
     private fun editSparePart(sparepart: Sparepart){
         (requireActivity() as ActivityCallbacks).showFragment(NamesOfFragment.SPAREPART, sparepart)
@@ -164,18 +188,22 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
             }
         }
 
+        fun removeItem(sparePart: Sparepart) {
+            Log.d("RecyclerViewDebug", "Удаляем из адаптера: ${sparePart.sparePartName}")
+
+            // 🔥 Ждем обновления LiveData
+            notifyDataSetChanged()
+        }
+
 
         fun updateData(newItems: List<Sparepart>) {
-            // 1. Создаем новый список для элементов RecyclerView
-            //val newList = newItems.map { it.copy() } // Глубокое копирование
+            Log.d("RecyclerViewDebug", "updateData() вызван! Новый список: ${newItems.size} элементов")
+
+            val diffCallback = StudentDiffCallback(items, newItems)
+            val diffResult = DiffUtil.calculateDiff(diffCallback)
 
             items = newItems
-            notifyDataSetChanged() // Принудительное обновление всего списка
-
-
-            // 3. Обновляем список items и применяем изменения с помощью DiffUtil
-            //items = newList // Присваиваем НОВЫЙ список
-
+            diffResult.dispatchUpdatesTo(this) // 🔥 Используем DiffUtil для обновления
         }
 
 
@@ -213,7 +241,7 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
             @OptIn(DelicateCoroutinesApi::class)
             fun bind(sparepart: Sparepart) {
                 this.sparepart = sparepart
-                if (sparepart == viewModel.sparePart) {
+                if (sparepart == viewModel.selectedSparePart.value) {
                     updateCurrentView(itemView)
                 }
                 val tv = itemView.findViewById<TextView>(R.id.tvSparePartName)
@@ -256,7 +284,7 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
                     editSparePart(sparepart)
                 }
                 itemView.findViewById<ImageButton>(R.id.ibDeleteSparePart).setOnClickListener {
-                    deleteDialog()
+                    deleteDialog(sparepart)
                 }
                 val llb = itemView.findViewById<LinearLayout>(R.id.llSparePartButtons)
                 llb.visibility = View.INVISIBLE

@@ -1,8 +1,8 @@
 <resources>
-    <string name="app_name">list_4pm2_2425</string>
-    <string name="preference_key_faculty_list">faculty_list</string>
-    <string name="preference_key_group_list">group_list</string>
-    <string name="preference_key_student_list">student_list</string>
+    <string name="app_name">⭕️⭕️\_____/⭕️⭕️CARS⭕️⭕️\_____/⭕️⭕️</string>
+    <string name="preference_key_carModel_list">carModel_list</string>
+    <string name="preference_key_catalog_list">catalog_list</string>
+    <string name="preference_key_sparePart_list">sparePart_list</string>
     <string-array name="SEX">
         <item>Отлично</item>
         <item>Нормально</item>

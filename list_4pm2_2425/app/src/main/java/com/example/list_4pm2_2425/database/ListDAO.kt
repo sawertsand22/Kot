@@ -54,7 +54,7 @@ interface ListDAO {
 
 
 
-    @Query("select * from spareparts where sparePartName like '%' | :search | '%' or 1")
+    @Query("select * from spareparts where sparePartName like '%' || :search || '%'")
     fun getAllSparepart(search: String = ""): Flow<List<Sparepart>>
 
     @Query("select * from spareparts where catalog_id=:catalogID")
@@ -83,5 +83,16 @@ interface ListDAO {
     // Получение текущего авторизованного пользователя
     @Query("SELECT * FROM users WHERE isLoggedIn = 1 LIMIT 1")
     suspend fun getLoggedInUser(): User?
+
+
+//Для обработки строки поиска
+@Query("SELECT * FROM spareparts WHERE catalog_id = :catalogID AND sparePartName LIKE '%' || :search || '%'")
+fun searchSpareparts(catalogID: UUID, search: String): Flow<List<Sparepart>>
+
+
+
+
+
+
 
 }

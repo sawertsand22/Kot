@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
@@ -23,6 +24,7 @@ import com.example.list_4pm2_2425.data.CarModel
 import com.example.list_4pm2_2425.data.NamesOfFragment
 import com.example.list_4pm2_2425.databinding.FragmentCarmodelBinding
 import com.example.list_4pm2_2425.interfaces.ActivityCallbacks
+import com.example.list_4pm2_2425.utils.SessionManager
 
 class CarModelFragment : Fragment(), MainActivity.Edit {
 
@@ -48,6 +50,7 @@ class CarModelFragment : Fragment(), MainActivity.Edit {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)  // Говорим Android, что фрагмент имеет свое меню
     }
 
     private var isAuthorized = false//
@@ -192,6 +195,8 @@ class CarModelFragment : Fragment(), MainActivity.Edit {
             }
         }
 
+
+
     override fun append() {
         editCarModel()
     }
@@ -250,9 +255,32 @@ class CarModelFragment : Fragment(), MainActivity.Edit {
             .show()
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        val isAuthorized = SessionManager.isUserAuthorized(requireContext())
+
+        // Обновляем UI
+        updateUI(isAuthorized)
+
+        // Обновляем меню
+        requireActivity().invalidateOptionsMenu()
+    }
+    private fun updateUI(isAuthorized: Boolean) {
+        // Обновляем кнопку выхода
+        val btnLogout = requireActivity().findViewById<Button>(R.id.btnLogout)
+        btnLogout.visibility = if (isAuthorized) View.VISIBLE else View.GONE
+
+        // Обновляем кнопки меню
+        requireActivity().invalidateOptionsMenu()
+    }
+
     private var activityCallbacks : ActivityCallbacks? = null
     override fun onAttach(context: Context) {
         activityCallbacks = context as ActivityCallbacks
         super.onAttach(context)
     }
+
+
+
 }

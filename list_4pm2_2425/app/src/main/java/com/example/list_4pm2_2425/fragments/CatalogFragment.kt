@@ -17,6 +17,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.example.list_4pm2_2425.MainActivity
 import com.example.list_4pm2_2425.R
@@ -50,6 +51,10 @@ class CatalogFragment : Fragment(), MainActivity.Edit {
             return INSTANCE!!
         }
     }
+    private var currentSearchQuery: String = ""
+
+
+
     private lateinit var btnLoginRegister: Button
     private var tabPosition: Int = 0
 
@@ -90,10 +95,16 @@ class CatalogFragment : Fragment(), MainActivity.Edit {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        btnLoginRegister = view.findViewById(R.id.btnLoginRegister)
-        btnLogout = view.findViewById(R.id.btnLogout)
-        val isAuthorized = isUserAuthorized()
-        updBtn()
+
+
+
+
+
+
+        //btnLoginRegister = view.findViewById(R.id.btnLoginRegister)
+        //btnLogout = view.findViewById(R.id.btnLogout)
+        //val isAuthorized = isUserAuthorized()
+        //updBtn()
         // Наблюдение за изменениями в списке групп
         viewModel.catalogList.observe(viewLifecycleOwner) { catalogList ->
             createUI(catalogList)
@@ -104,28 +115,24 @@ class CatalogFragment : Fragment(), MainActivity.Edit {
             }
 
         }
-        val btnLogout: Button? = view.findViewById(R.id.btnLogout)
-        btnLogout?.setOnClickListener {
-            SessionManager.saveUserState(requireContext(), false)
-            Toast.makeText(context, "Вы вышли из аккаунта", Toast.LENGTH_SHORT).show()
+//        val btnLogout: Button? = view.findViewById(R.id.btnLogout)
+//        btnLogout?.setOnClickListener {
+//            SessionManager.saveUserState(requireContext(), false)
+//            Toast.makeText(context, "Вы вышли из аккаунта", Toast.LENGTH_SHORT).show()
+//
+//            //logoutUser()
+//            updBtn()  // Обновление состояния кнопок после выхода
+//            // Переход к экрану входа
+//            activity?.supportFragmentManager?.beginTransaction()
+//                ?.replace(R.id.fcvMain, CatalogFragment())
+//                ?.commit()
+//        }
 
-            //logoutUser()
-            updBtn()  // Обновление состояния кнопок после выхода
-            // Переход к экрану входа
-            activity?.supportFragmentManager?.beginTransaction()
-                ?.replace(R.id.fcvMain, CatalogFragment())
-                ?.commit()
-        }
-        // Настройка поиска
-        binding.etSearch.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-            override fun afterTextChanged(s: Editable?) {
-                Log.d("SearchDebug", "Search query: ${s.toString()}")
-                sparePartsViewModel.filterSparePartsByName(s.toString()) // Изменено: вызов метода фильтрации
-               // sparePartsViewModel.sparepartList.postValue()
-            }
-        })
+
+
+
+
+
 
 
 //   ИЗ СПАРЕПАРТ ФРАГМЕНТ     viewModel.sparepartList.observe(viewLifecycleOwner) { spareparts ->
@@ -137,17 +144,17 @@ class CatalogFragment : Fragment(), MainActivity.Edit {
 
 
 
-        btnLoginRegister = view.findViewById(R.id.btnLoginRegister)
+        //btnLoginRegister = view.findViewById(R.id.btnLoginRegister)
 
-        btnLoginRegister.setOnClickListener {
-            // Открытие фрагмента регистрации
-            val transaction = activity?.supportFragmentManager?.beginTransaction()
-            transaction?.replace(R.id.fcvMain, RegisterFragment()) // Замена текущего фрагмента на RegisterFragment
-            transaction?.addToBackStack(null)
-            transaction?.commit()
-
-            updBtn()
-        }
+//        btnLoginRegister.setOnClickListener {
+//            // Открытие фрагмента регистрации
+//            val transaction = activity?.supportFragmentManager?.beginTransaction()
+//            transaction?.replace(R.id.fcvMain, RegisterFragment()) // Замена текущего фрагмента на RegisterFragment
+//            transaction?.addToBackStack(null)
+//            transaction?.commit()
+//
+//            updBtn()
+//        }
         //openLoginRegisterFragment()
 
            //binding.tlGroups.setOnLongClickListener {
@@ -301,7 +308,7 @@ class CatalogFragment : Fragment(), MainActivity.Edit {
 
     private fun deleteDialog() {
         if (!isUserAuthorized()) {
-            Toast.makeText(requireContext(), "Требуется авторизация для изменения модели", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Требуется авторизация для изменения", Toast.LENGTH_SHORT).show()
             return
         }
         if (viewModel.catalog == null) return
@@ -319,7 +326,7 @@ class CatalogFragment : Fragment(), MainActivity.Edit {
 
     private fun editCatalog(catalogName: String = "") {
         if (!isUserAuthorized()) {
-            Toast.makeText(requireContext(), "Требуется авторизация для изменения модели", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Требуется авторизация для изменения", Toast.LENGTH_SHORT).show()
             return
         }
         val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_string, null)

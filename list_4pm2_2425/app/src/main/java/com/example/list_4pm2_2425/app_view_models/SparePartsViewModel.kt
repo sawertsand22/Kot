@@ -1,85 +1,113 @@
 package com.example.list_4pm2_2425.app_view_models
 
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.list_4pm2_2425.data.Catalog
 import com.example.list_4pm2_2425.data.Sparepart
 import com.example.list_4pm2_2425.repository.AppRepository
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 class SparePartsViewModel : ViewModel() {
-    var sparepartList: MutableLiveData<List<Sparepart>> = MutableLiveData()
-    private var _sparepart: Sparepart? = null
-    val sparePart
-        get()=_sparepart
+    private val repository = AppRepository.getInstance() // Получаем репозиторий
+
+    private val _sparepartList = MutableLiveData<List<Sparepart>>() // 🔥 Основной список запчастей
+    val sparepartList: LiveData<List<Sparepart>> get() = _sparepartList
+
+    private val _selectedSparePart = MutableLiveData<Sparepart?>() // 🔥 Выбранная запчасть
+    val selectedSparePart: LiveData<Sparepart?> get() = _selectedSparePart
+
+    private val _searchQuery = MutableLiveData<String>() // 🔥 Поисковый запрос
+    val searchQuery: LiveData<String> get() = _searchQuery
 
     var catalog: Catalog? = null
-    private var allSpareparts: List<Sparepart> = emptyList()
-    fun set_Catalog(catalog: Catalog){
+    private var allSpareParts: List<Sparepart> = emptyList() // 🔥 Полный список запчастей
+
+    // ✅ Загружаем запчасти для каталога
+    fun set_Catalog(catalog: Catalog) {
         this.catalog = catalog
-        AppRepository.getInstance().listOfSparepart.observeForever { catalogs ->
-            if (sparepartList.value.isNullOrEmpty()) {
-                allSpareparts = AppRepository.getInstance().getCatalogSpareParts(catalog.id)
-                Log.d("SparePartsDebug", "All spare parts loaded: ${allSpareparts.size}")
-                sparepartList.value = allSpareparts
+        viewModelScope.launch {
+            repository.getCatalogSpareParts(catalog.id).collectLatest { spareParts ->
+                Log.d("SparePartsViewModel", "🔄 Загружено ${spareParts.size} запчастей")
+
+                if (spareParts.isNotEmpty()) {
+                    allSpareParts = spareParts.toList() // ✅ Сохраняем список для поиска
+                    _sparepartList.postValue(spareParts) // ✅ Обновляем UI
+                    Log.d("SparePartsViewModel", "✅ allSpareParts теперь содержит ${allSpareParts.size} элементов")
+                } else {
+                    Log.d("SparePartsViewModel", "❌ Ошибка: Получен пустой список запчастей")
+                }
             }
-           // allSpareparts = AppRepository.getInstance().getCatalogSpareParts(catalog.id) // Инициализируем исходный список
-
-
-
-         //   Log.d("SparePartsDebug", "All spare parts reloaded: ${allSpareparts.size}")
-           // sparepartList.postValue(allSpareparts) // Изначально отображаем полный список
-        }
-        AppRepository.getInstance().sparepart.observeForever{
-            _sparepart = it
         }
     }
 
-    fun deleteSparePart(){
-        if(sparePart != null)
-            AppRepository.getInstance().deleteSparePart(sparePart!!)
-    }
 
-    fun setCurrentSparePart(sparepart: Sparepart){
-        AppRepository.getInstance().setCurrentSparePart(sparepart)
-    }
 
-    // Фильтрация студентов по имени
-    fun filterSparePartsByName(name: String) {
-        Log.d("FilterSpareParts", "Filtering by name: $name")
+    // ✅ Фильтрация списка
+    fun filterSparePartsByName(searchQuery: String) {
+        Log.d("FilterSpareParts", "📊 Текущий список запчастей перед поиском: ${allSpareParts.size} элементов")
 
-        val filteredList = allSpareparts.filter { // Фильтруем ИСХОДНЫЙ список!
-            Log.d("FilterSpareParts", "Checking: ${it.sparePartName} - Match: ${it.sparePartName.contains(name, ignoreCase = true)}")
-            it.sparePartName.trim().contains(name, ignoreCase = true) ||
-                    it.manufacturer.trim().contains(name, ignoreCase = true) ||
-                    it.numberCatalog.trim().contains(name, ignoreCase = true)
+        if (allSpareParts.isEmpty()) {
+            Log.d("FilterSpareParts", "❌ Ошибка: allSpareParts пуст! Ждём данные...")
+            return
         }
 
-        Log.d("FilterSpareParts", "Filtered list size: ${filteredList.size}")
-        sparepartList.value = filteredList
-        // ⬅️ Меняем на value вместо postValue
-            //sparepartList.postValue(filteredList) // Обновляем LiveData ОТФИЛЬТРОВАННЫМ списком!
+        val filteredList = allSpareParts.filter {
+            it.sparePartName.contains(searchQuery, ignoreCase = true) ||
+                    it.manufacturer.contains(searchQuery, ignoreCase = true) ||
+                    it.numberCatalog.contains(searchQuery, ignoreCase = true)
+        }
+
+        Log.d("FilterSpareParts", "✅ Отфильтровано: ${filteredList.size} из ${allSpareParts.size}")
+        _sparepartList.value = filteredList // 🔥 Обновляем UI
     }
 
 
 
 
-    // Фильтрация студентов по VIN
 
+    // ✅ Удаление запчасти
+    fun deleteSparePart() {
+        val partToDelete = _selectedSparePart.value ?: run {
+            Log.d("DeleteSparePart", "❌ Ошибка: sparePart == null, удалять нечего!")
+            return
+        }
+
+        viewModelScope.launch {
+            Log.d("DeleteSparePart", "🔥 Пытаемся удалить: ${partToDelete.sparePartName}")
+
+            repository.deleteSparePart(partToDelete)
+
+            // 🔥 Обновляем список из БД
+            val catalogId = catalog?.id ?: return@launch
+            repository.getCatalogSpareParts(catalogId).collect { spareParts ->
+                allSpareParts = spareParts
+                _sparepartList.postValue(spareParts)
+                Log.d("DeleteSparePart", "✅ Обновленный список после удаления: ${spareParts.size} запчастей")
+            }
+        }
+    }
+
+    // ✅ Устанавливаем выбранную запчасть
+    fun setCurrentSparePart(sparepart: Sparepart) {
+        _selectedSparePart.value = sparepart
+        Log.d("SetSparePart", "🔹 Установили текущую запчасть: ${sparepart.sparePartName}")
+    }
+
+    // ✅ Сортировка
     fun sortByName() {
-        val sortedList = sparepartList.value?.sortedBy { it.sparePartName }
-        sparepartList.postValue(sortedList)
+        _sparepartList.value = _sparepartList.value?.sortedBy { it.sparePartName }
     }
 
-    // Сортировка студентов по middleName
     fun sortByMiddleName() {
-        val sortedList = sparepartList.value?.sortedBy { it.manufacturer }
-        sparepartList.postValue(sortedList)
+        _sparepartList.value = _sparepartList.value?.sortedBy { it.manufacturer }
     }
 
-    // Сортировка студентов по lastName
     fun sortByLastName() {
-        val sortedList = sparepartList.value?.sortedBy { it.numberCatalog }
-        sparepartList.postValue(sortedList)
+        _sparepartList.value = _sparepartList.value?.sortedBy { it.numberCatalog }
     }
 }

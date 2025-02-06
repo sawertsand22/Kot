@@ -7,10 +7,26 @@
     android:layout_height="match_parent"
     tools:context=".fragments.SparePartsFragment" >
 
+    <EditText
+        android:id="@+id/etSearch"
+        android:layout_width="335dp"
+        android:layout_height="45dp"
+        android:background="@android:drawable/editbox_background"
+        android:hint="Поиск запчастей"
+        android:inputType="text"
+        android:padding="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvSpareParts"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_width="407dp"
+        android:layout_height="597dp"
+        android:layout_marginTop="44dp"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="2dp" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabAppendSparePart"

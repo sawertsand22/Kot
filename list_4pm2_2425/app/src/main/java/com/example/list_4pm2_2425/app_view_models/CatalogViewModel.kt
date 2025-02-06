@@ -7,11 +7,14 @@ import com.example.list_4pm2_2425.repository.AppRepository
 
 class CatalogViewModel : ViewModel() {
 
+
+
+
     var catalogList: MutableLiveData<List<Catalog>> = MutableLiveData()
     private var _catalog: Catalog? = null
     val catalog
         get()=_catalog
-
+    val searchQuery = MutableLiveData<String>() // 🔥 Храним строку поиска
     init {
         AppRepository.getInstance().listOfCatalog.observeForever {
             catalogList.postValue(AppRepository.getInstance().carModelCatalog)
@@ -25,6 +28,14 @@ class CatalogViewModel : ViewModel() {
             catalogList.postValue(AppRepository.getInstance().carModelCatalog)
         }
     }
+
+
+
+
+    fun setSearchQuery(query: String) {
+        searchQuery.value = query // 🔥 Обновляем поисковый запрос
+    }
+
 
     fun deleteCatalog(){
         if(catalog!=null)
@@ -59,4 +70,7 @@ class CatalogViewModel : ViewModel() {
 
     val carModel
         get()=AppRepository.getInstance().carModel.value
+
+
+
 }

@@ -12,6 +12,7 @@ import com.example.list_4pm2_2425.database.ListDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import java.util.UUID
 
@@ -195,6 +196,13 @@ class AppRepository {
         sparepart.postValue(_sparepart)
     }
 
+    fun getCatalogSpareParts(catalogID: UUID): Flow<List<Sparepart>> {
+        return listDB.getCatalogSpareparts(catalogID)
+    }
+
+
+
+
 //    fun updateStudent(student: Student){
 //        val position = getStudentPosition(student)
 //        if (position<0) addStudent(student)
@@ -215,8 +223,8 @@ class AppRepository {
     val groupStudents
         get()=listOfSparepart.value?.filter{it.catalogID == (catalog.value?.id ?: 0)}?.sortedBy { it.shortName } ?: listOf()
 
-    fun getCatalogSpareParts(catalogID: UUID) =
-        (listOfSparepart.value?.filter{ it.catalogID == catalogID }?.sortedBy { it.shortName } ?: listOf())
+    //fun getCatalogSpareParts(catalogID: UUID) =
+     //   (listOfSparepart.value?.filter{ it.catalogID == catalogID }?.sortedBy { it.shortName } ?: listOf())
 
 
     private val listDB by lazy { OfflineDBRepository(ListDatabase.getDatabase(ListApp4PM_1_2425.context).listDAO()) }
@@ -288,4 +296,5 @@ class AppRepository {
             setCurrentSparePart(0)
         }
     }
+
 }

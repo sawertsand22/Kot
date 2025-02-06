@@ -6,67 +6,75 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
-import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.example.list_4pm2_2425.R
-import com.example.list_4pm2_2425.databinding.FragmentLoginBinding
+import com.example.list_4pm2_2425.database.ListDatabase
+import com.example.list_4pm2_2425.repository.OfflineDBRepository
 import com.example.list_4pm2_2425.utils.SessionManager
+import kotlinx.coroutines.launch
 
 class LoginFragment : Fragment() {
 
-    private lateinit var etUsername: EditText
+    private lateinit var etEmail: EditText
     private lateinit var etPassword: EditText
     private lateinit var btnLogin: Button
-    private lateinit var tvRegister: TextView
-    private var _binding: FragmentLoginBinding? = null
-    private val binding get() = _binding!!
+    private lateinit var btnGoToRegister: Button
+    private lateinit var repository: OfflineDBRepository
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         return inflater.inflate(R.layout.fragment_login, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        _binding = FragmentLoginBinding.bind(view)
+        etEmail = view.findViewById(R.id.etEmail)
+        etPassword = view.findViewById(R.id.etPassword)
+        btnLogin = view.findViewById(R.id.btnLogin)
+        btnGoToRegister = view.findViewById(R.id.btnGoToRegister)
 
-        // Получаем доступ к элементам
-        val etUsername = binding.etUsername
-        val etPassword = binding.etPassword
-        val btnLogin = binding.btnLogin
-        val tvRegister = binding.tvLogin
+        repository = OfflineDBRepository(ListDatabase.getDatabase(requireContext()).listDAO())
 
+        // Авторизация
         btnLogin.setOnClickListener {
-            val username = etUsername.text.toString()
+            val email = etEmail.text.toString()
             val password = etPassword.text.toString()
 
-            if (username.isEmpty() || password.isEmpty()) {
-                Toast.makeText(context, "Please enter both username and password", Toast.LENGTH_SHORT).show()
+            if (email.isEmpty() || password.isEmpty()) {
+                Toast.makeText(context, "Введите email и пароль", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
+
             }
 
-            // Проверка данных и сохранение состояния
-            SessionManager.saveUserState(requireContext(), true)
-            Toast.makeText(context, "Login successful", Toast.LENGTH_SHORT).show()
+            lifecycleScope.launch {
+                val success = repository.loginUser(email, password)
 
-            // Переход на основной экран
-            activity?.supportFragmentManager?.beginTransaction()
-                ?.replace(R.id.fcvMain, CatalogFragment.getInstance())
-                ?.commit()
+                if (success) {
+                    SessionManager.saveUserState(requireContext(), true)
+                    Toast.makeText(context, "Вход выполнен", Toast.LENGTH_SHORT).show()
+
+                    // Переход к основному экрану
+                 activity?.supportFragmentManager?.beginTransaction()
+                     ?.replace(R.id.fcvMain, CarModelFragment.getInstance())
+                        ?.commit()
+                   // activity?.supportFragmentManager?.popBackStack()
+                } else {
+                    Toast.makeText(context, "Неверный email или пароль", Toast.LENGTH_SHORT).show()
+                }
+            }
         }
 
-
-
         // Переход на экран регистрации
-        tvRegister.setOnClickListener {
-            val transaction = activity?.supportFragmentManager?.beginTransaction()
-            transaction?.replace(R.id.fcvMain, RegisterFragment())
-            transaction?.addToBackStack(null)
-            transaction?.commit()
+        btnGoToRegister.setOnClickListener {
+            activity?.supportFragmentManager?.beginTransaction()
+                ?.replace(R.id.fcvMain, RegisterFragment())
+                ?.addToBackStack(null)
+                ?.commit()
         }
     }
 }
