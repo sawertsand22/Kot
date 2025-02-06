@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.example.list_4pm2_2425.R
@@ -75,6 +76,17 @@ class LoginFragment : Fragment() {
                 ?.replace(R.id.fcvMain, RegisterFragment())
                 ?.addToBackStack(null)
                 ?.commit()
+        }
+
+
+        // 🔥 Обработчик кнопки "Назад" → возвращает в `CarModelFragment`
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            requireActivity().supportFragmentManager.beginTransaction()
+                .replace(R.id.fcvMain, CarModelFragment.getInstance())
+                .commit()
+
+            // 🔥 Обновляем меню и кнопки
+            requireActivity().invalidateOptionsMenu()
         }
     }
 }

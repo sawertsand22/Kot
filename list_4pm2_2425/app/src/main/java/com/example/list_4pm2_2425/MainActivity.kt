@@ -100,26 +100,79 @@ class MainActivity : AppCompatActivity(), ActivityCallbacks {
 
     private val catalogViewModel: CatalogViewModel by viewModels()
 
+//    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+//        menuInflater.inflate(R.menu.main_menu, menu)
+//        _miAppendCarModel = menu?.findItem(R.id.miNewCarModel)
+//        _miUpdateCarModel = menu?.findItem(R.id.miUpdateCarModel)
+//        _miDeleteCarModel = menu?.findItem(R.id.miDeleteCarModel)
+//        _miAppendCatalog = menu?.findItem(R.id.miNewCatalog)
+//        _miUpdateCatalog = menu?.findItem(R.id.miUpdateCatalog)
+//        _miDeleteCatalog = menu?.findItem(R.id.miDeleteCatalog)
+//
+//
+//        val currentFragment = supportFragmentManager.findFragmentById(R.id.fcvMain)
+//
+//        val isCatalogOrCarModel = currentFragment is CatalogFragment || currentFragment is CarModelFragment
+//
+//        // Показываем меню только если это CatalogFragment или CarModelFragment
+//        menu?.setGroupVisible(0, isCatalogOrCarModel)
+//
+//        updateMenu(activeFragment)
+//        return true
+//    }
+//
+//    private fun updateMenu(fragmentType: NamesOfFragment){
+//        _miAppendCarModel?.isVisible = fragmentType==NamesOfFragment.CARMODEL
+//        _miUpdateCarModel?.isVisible = fragmentType==NamesOfFragment.CARMODEL
+//        _miDeleteCarModel?.isVisible = fragmentType==NamesOfFragment.CARMODEL
+//        _miAppendCatalog?.isVisible = fragmentType==NamesOfFragment.CATALOG
+//        _miUpdateCatalog?.isVisible = fragmentType==NamesOfFragment.CATALOG
+//        _miDeleteCatalog?.isVisible = fragmentType==NamesOfFragment.CATALOG
+//    }
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.main_menu, menu)
+
         _miAppendCarModel = menu?.findItem(R.id.miNewCarModel)
         _miUpdateCarModel = menu?.findItem(R.id.miUpdateCarModel)
         _miDeleteCarModel = menu?.findItem(R.id.miDeleteCarModel)
         _miAppendCatalog = menu?.findItem(R.id.miNewCatalog)
         _miUpdateCatalog = menu?.findItem(R.id.miUpdateCatalog)
         _miDeleteCatalog = menu?.findItem(R.id.miDeleteCatalog)
-        updateMenu(activeFragment)
+
+        // Проверяем, какой фрагмент сейчас активен
+        val currentFragment = supportFragmentManager.findFragmentById(R.id.fcvMain)
+
+        when (currentFragment) {
+            is CarModelFragment -> {
+                showCarModelMenu(true)
+                showCatalogMenu(false)
+            }
+            is CatalogFragment -> {
+                showCarModelMenu(false)
+                showCatalogMenu(true)
+            }
+            else -> {
+                showCarModelMenu(false)
+                showCatalogMenu(false)
+            }
+        }
+
         return true
     }
-
-    private fun updateMenu(fragmentType: NamesOfFragment){
-        _miAppendCarModel?.isVisible = fragmentType==NamesOfFragment.CARMODEL
-        _miUpdateCarModel?.isVisible = fragmentType==NamesOfFragment.CARMODEL
-        _miDeleteCarModel?.isVisible = fragmentType==NamesOfFragment.CARMODEL
-        _miAppendCatalog?.isVisible = fragmentType==NamesOfFragment.CATALOG
-        _miUpdateCatalog?.isVisible = fragmentType==NamesOfFragment.CATALOG
-        _miDeleteCatalog?.isVisible = fragmentType==NamesOfFragment.CATALOG
+    private fun showCarModelMenu(isVisible: Boolean) {
+        _miAppendCarModel?.isVisible = isVisible
+        _miUpdateCarModel?.isVisible = isVisible
+        _miDeleteCarModel?.isVisible = isVisible
     }
+
+    private fun showCatalogMenu(isVisible: Boolean) {
+        _miAppendCatalog?.isVisible = isVisible
+        _miUpdateCatalog?.isVisible = isVisible
+        _miDeleteCatalog?.isVisible = isVisible
+    }
+
+
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId){
@@ -182,7 +235,10 @@ class MainActivity : AppCompatActivity(), ActivityCallbacks {
 
         btnLogin.visibility = if (isAuthorized) View.GONE else View.VISIBLE
         btnLogout.visibility = if (isAuthorized) View.VISIBLE else View.GONE
+
+        invalidateOptionsMenu() // 🔥 ОБНОВЛЯЕМ МЕНЮ ПОСЛЕ ИЗМЕНЕНИЙ
     }
+
 
 
 
@@ -207,8 +263,9 @@ class MainActivity : AppCompatActivity(), ActivityCallbacks {
                     .addToBackStack(null)
                     .commit()
                 showAuthButtons(true) // Показываем кнопки только здесь
-                updateMenu(NamesOfFragment.CARMODEL)
+                //updateMenu(NamesOfFragment.CARMODEL)
                 // Обновляем меню сразу
+
                 invalidateOptionsMenu()
             }
             NamesOfFragment.CATALOG -> {
@@ -248,7 +305,7 @@ class MainActivity : AppCompatActivity(), ActivityCallbacks {
             }
         }
         activeFragment = fragmentType
-        updateMenu(fragmentType)
+        //updateMenu(fragmentType)
 
     }
 

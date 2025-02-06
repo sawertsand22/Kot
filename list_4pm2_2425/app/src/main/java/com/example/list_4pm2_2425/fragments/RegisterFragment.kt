@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.example.list_4pm2_2425.R
@@ -65,6 +66,12 @@ class RegisterFragment : Fragment() {
                 }
             }
 
+        }
+
+
+        // Обработчик кнопки "Назад"
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            activity?.supportFragmentManager?.popBackStack()
         }
 
     }

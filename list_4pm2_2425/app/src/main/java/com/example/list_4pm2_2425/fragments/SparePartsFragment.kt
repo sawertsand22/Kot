@@ -165,7 +165,7 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
     private fun editSparePart(sparepart: Sparepart){
         (requireActivity() as ActivityCallbacks).showFragment(NamesOfFragment.SPAREPART, sparepart)
-        (requireActivity() as ActivityCallbacks).newTitle("Группа ${viewModel.catalog?.name}")
+        (requireActivity() as ActivityCallbacks).newTitle("Каталог ${viewModel.catalog?.name}")
     }
 
     private inner class SparePartAdapter(private var items: List<Sparepart>) :
