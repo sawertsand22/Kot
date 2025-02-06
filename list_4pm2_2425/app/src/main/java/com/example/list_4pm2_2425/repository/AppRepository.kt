@@ -36,31 +36,7 @@ class AppRepository {
     //var listOfStudent: MutableLiveData<ListOfStudent> = MutableLiveData()
     var sparepart: MutableLiveData<Sparepart> = MutableLiveData()
 
-//    fun addFaculty(faculty: Faculty){
-//        val listTmp = (listOfFaculty.value ?: ListOfFaculty()).apply {
-//            items.add(faculty)
-//        }
-//        listOfFaculty.postValue(listTmp)
-//        setCurrentFaculty(faculty)
-//    }
-//
-//    fun updateFaculty(faculty: Faculty){
-//        val position = getFacultyPosition(faculty)
-//        if (position < 0) addFaculty(faculty)
-//        else{
-//            val listTmp = listOfFaculty.value!!
-//            listTmp.items[position]=faculty
-//            listOfFaculty.postValue(listTmp)
-//        }
-//    }
-//
-//    fun deleteFaculty(faculty: Faculty){
-//        val listTmp = listOfFaculty.value!!
-//        if(listTmp.items.remove(faculty)){
-//            listOfFaculty.postValue(listTmp)
-//        }
-//        setCurrentFaculty(0)
-//    }
+
 
     fun getCarModelPosition(carModel: CarModel): Int = listOfCarModel.value?.indexOfFirst{
         it.id==carModel.id } ?:-1
@@ -78,60 +54,13 @@ class AppRepository {
         carModel.postValue(_carModel)
     }
 
-    fun saveData(){
-//        val context = ListApp4PM_1_2425.context
-//        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
-//        sharedPreferences.edit().apply{
-//            val gson = Gson()
-//            val lst=listOfFaculty.value?.items ?: listOf<Faculty>()
-//            val jsonString = gson.toJson(lst)
-//            putString(context.getString(R.string.preference_key_faculty_list), jsonString)
-//            putString(context.getString(R.string.preference_key_group_list),
-//                gson.toJson(listOfStudent.value?.items ?: listOf<Group>()))
-//            putString(context.getString(R.string.preference_key_student_list),
-//                gson.toJson(listOfStudent.value?.items ?: listOf<Student>()))
-//            apply()
-//        }
-    }
+
 
     fun loadData(){
-//        val context = ListApp4PM_1_2425.context
-//        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
-//        sharedPreferences.apply{
-//            val jsonString = getString(context.getString(R.string.preference_key_faculty_list), null)
-//            if (jsonString!=null) {
-//                val listType = object: TypeToken<List<Faculty>>() {}.type
-//                val tempList = Gson().fromJson<List<Faculty>>(jsonString, listType)
-//                val temp = ListOfFaculty()
-//                temp.items = tempList.toMutableList()
-//                listOfFaculty.postValue(temp)
-//            }
-//            val jsonStringG = getString(context.getString(R.string.preference_key_group_list), null)
-//            if (jsonStringG!=null) {
-//                val listTypeG = object: TypeToken<List<Group>>() {}.type
-//                val tempListG = Gson().fromJson<List<Group>>(jsonStringG, listTypeG)
-//                val tempG = ListOfGroup()
-//                tempG.items = tempListG.toMutableList()
-//                listOfGroup.postValue(tempG)
-//            }
-//            val jsonStringS = getString(context.getString(R.string.preference_key_student_list), null)
-//            if (jsonStringS!=null) {
-//                val listTypeS = object: TypeToken<List<Student>>() {}.type
-//                val tempListS = Gson().fromJson<List<Student>>(jsonStringS, listTypeS)
-//                val tempS = ListOfStudent()
-//                tempS.items = tempListS.toMutableList()
-//                listOfStudent.postValue(tempS)
-//            }
-//        }
+
     }
 
-//    fun addGroup(group: Group){
-//        val listTmp = (listOfGroup.value ?: ListOfGroup()).apply{
-//            items.add(group)
-//        }
-//        listOfGroup.postValue(listTmp)
-//        setCurrentGroup(group)
-//    }
+
 
     fun getCatalogPosition(catalog: Catalog): Int = listOfCatalog.value?.indexOfFirst {
         it.id==catalog.id} ?:-1
@@ -149,22 +78,7 @@ class AppRepository {
         catalog.postValue(_catalog)
     }
 
-//    fun updateGroup(group: Group){
-//        val position = getGroupPosition(group)
-//        if (position<0) addGroup(group)
-//        else {
-//            val listTmp = listOfGroup.value!!
-//            listTmp.items[position]=group
-//            listOfGroup.postValue(listTmp)
-//        }
-//    }
-//
-//    fun deleteGroup(group: Group){
-//        val listTmp = listOfGroup.value ?: ListOfGroup()
-//        if (listTmp.items.remove(group))
-//            listOfGroup.postValue(listTmp)
-//        setCurrentGroup(0)
-//    }
+
 
     val carModelCatalog
         get()=listOfCatalog.value?.filter{it.carModelID == (carModel.value?.id ?: 0)}?.sortedBy { it.name } ?: listOf()
@@ -172,13 +86,7 @@ class AppRepository {
     fun getCarModelGroups(facultyID: UUID) =
         (listOfCatalog.value?.filter{ it.carModelID == facultyID }?.sortedBy { it.name } ?: listOf())
 
-//    fun addStudent(student: Student){
-//        val listTmp = (listOfStudent.value ?: ListOfStudent()).apply {
-//            items.add(student)
-//        }
-//        listOfStudent.postValue(listTmp)
-//        setCurrentStudent(student)
-//    }
+
 
     fun getSparepartPosition(sparepart: Sparepart): Int = listOfSparepart.value?.indexOfFirst {
         it.id==sparepart.id} ?:-1
@@ -203,28 +111,12 @@ class AppRepository {
 
 
 
-//    fun updateStudent(student: Student){
-//        val position = getStudentPosition(student)
-//        if (position<0) addStudent(student)
-//        else {
-//            val listTmp = listOfStudent.value!!
-//            listTmp.items[position]=student
-//            listOfStudent.postValue(listTmp)
-//        }
-//    }
-//
-//    fun deleteStudent(student: Student){
-//        val listTmp = listOfStudent.value ?: ListOfStudent()
-//        if (listTmp.items.remove(student))
-//            listOfStudent.postValue(listTmp)
-//        setCurrentStudent(0)
-//    }
+
 
     val groupStudents
         get()=listOfSparepart.value?.filter{it.catalogID == (catalog.value?.id ?: 0)}?.sortedBy { it.shortName } ?: listOf()
 
-    //fun getCatalogSpareParts(catalogID: UUID) =
-     //   (listOfSparepart.value?.filter{ it.catalogID == catalogID }?.sortedBy { it.shortName } ?: listOf())
+
 
 
     private val listDB by lazy { OfflineDBRepository(ListDatabase.getDatabase(ListApp4PM_1_2425.context).listDAO()) }

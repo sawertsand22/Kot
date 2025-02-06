@@ -72,32 +72,7 @@ class SparePartsFragment : Fragment() {
         //return inflater.inflate(R.layout.fragment_students, container, false)
     }
 
-//    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-//        super.onViewCreated(view, savedInstanceState)
-//        viewModel = ViewModelProvider(this).get(SparePartsViewModel::class.java)
-//        viewModel.set_Catalog(catalog)
 //
-//        Log.d("RecyclerViewDebug до кода", "Adapter attached: ${binding.rvSpareParts.adapter != null}")
-//
-//        sparePartAdapter = SparePartAdapter(emptyList()) // Инициализируем адаптер ПУСТЫМ списком
-//        binding.rvSpareParts.adapter = sparePartAdapter
-//        Log.d("RecyclerViewDebug пссле кода ", "Adapter attached: ${binding.rvSpareParts.adapter != null}")
-//
-//
-//        viewModel.sparepartList.observe(viewLifecycleOwner) { spareparts ->
-//            Log.d("FragmentObserve", "SparePart list updated in fragment: ${spareparts.size}, first item: ${spareparts.firstOrNull()?.sparePartName}")
-//            sparePartAdapter.updateData(spareparts)
-//                //sparePartAdapter = SparePartAdapter(spareparts)  // ⬅️ Создаем новый адаптер
-//            //binding.rvSpareParts.adapter = sparePartAdapter  // ⬅️ Присваиваем заново
-//                // binding.rvSpareParts.adapter?.notifyDataSetChanged()  // ⬅️ Принудительное обновление
-//            binding.rvSpareParts.requestLayout()
-//        }
-//            //binding.rvSpareParts.adapter?.notifyDataSetChanged()
-//
-//        binding.fabAppendSparePart.setOnClickListener {
-//            editSparePart(Sparepart().apply { catalogID = viewModel.catalog?.id })
-//        }
-//    }
 override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     viewModel = ViewModelProvider(this).get(SparePartsViewModel::class.java)
@@ -109,16 +84,16 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
     // Наблюдение за LiveData
     viewModel.sparepartList.observe(viewLifecycleOwner) { spareparts ->
-        Log.d("FragmentObserve", "Обновляем UI. Количество: ${spareparts.size}")
-        //updateRecyclerView(spareParts)
+
+
         sparePartAdapter.updateData(spareparts)
-//        binding.rvSpareParts.requestLayout()
+
     }
 
     binding.etSearch.addTextChangedListener(object : TextWatcher {
         override fun afterTextChanged(s: Editable?) {
             val query = s.toString().trim()
-            Log.d("SearchInput", "🔎 Поиск: $query")
+
             viewModel.filterSparePartsByName(query)
         }
 
@@ -137,10 +112,10 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     }
 
     private fun deleteDialog(sparepart: Sparepart) {
-        Log.d("DeleteDialog", "⚡️ Открываем диалог удаления!")
+
 
         if (!isUserAuthorized()) {
-            Log.d("DeleteDialog", "❌ Ошибка: пользователь не авторизован!")
+
             Toast.makeText(requireContext(), "Требуется авторизация", Toast.LENGTH_SHORT).show()
             return
         }
@@ -149,7 +124,7 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
             .setTitle("Удаление")
             .setMessage("Удалить запчасть ${sparepart.sparePartName}?")
             .setPositiveButton("Да") { _, _ ->
-                Log.d("DeleteDialog", "✅ Нажали 'Да', запускаем удаление")
+
 
                 viewModel.setCurrentSparePart(sparepart) // 🔥 Устанавливаем текущую запчасть
                 viewModel.deleteSparePart()
@@ -178,20 +153,20 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
             override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
                 val oldItem = oldList[oldItemPosition]
                 val newItem = newList[newItemPosition]
-                return oldItem.id == newItem.id // Or your unique ID comparison
+                return oldItem.id == newItem.id //
             }
 
             override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
                 val oldItem = oldList[oldItemPosition]
                 val newItem = newList[newItemPosition]
-                return oldItem == newItem // Or compare relevant content properties
+                return oldItem == newItem //
             }
         }
 
         fun removeItem(sparePart: Sparepart) {
             Log.d("RecyclerViewDebug", "Удаляем из адаптера: ${sparePart.sparePartName}")
 
-            // 🔥 Ждем обновления LiveData
+            // Ждем обновления LiveData
             notifyDataSetChanged()
         }
 

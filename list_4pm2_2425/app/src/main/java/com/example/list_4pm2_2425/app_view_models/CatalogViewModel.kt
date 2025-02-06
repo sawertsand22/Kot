@@ -14,7 +14,7 @@ class CatalogViewModel : ViewModel() {
     private var _catalog: Catalog? = null
     val catalog
         get()=_catalog
-    val searchQuery = MutableLiveData<String>() // 🔥 Храним строку поиска
+    val searchQuery = MutableLiveData<String>() //  Храним строку поиска
     init {
         AppRepository.getInstance().listOfCatalog.observeForever {
             catalogList.postValue(AppRepository.getInstance().carModelCatalog)
@@ -33,7 +33,7 @@ class CatalogViewModel : ViewModel() {
 
 
     fun setSearchQuery(query: String) {
-        searchQuery.value = query // 🔥 Обновляем поисковый запрос
+        searchQuery.value = query //  Обновляем поисковый запрос
     }
 
 

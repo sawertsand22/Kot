@@ -79,13 +79,13 @@ class LoginFragment : Fragment() {
         }
 
 
-        // 🔥 Обработчик кнопки "Назад" → возвращает в `CarModelFragment`
+        //  Обработчик кнопки  возвращает в `CarModelFragment`
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
             requireActivity().supportFragmentManager.beginTransaction()
                 .replace(R.id.fcvMain, CarModelFragment.getInstance())
                 .commit()
 
-            // 🔥 Обновляем меню и кнопки
+            //Обновляем меню и кнопки
             requireActivity().invalidateOptionsMenu()
         }
     }

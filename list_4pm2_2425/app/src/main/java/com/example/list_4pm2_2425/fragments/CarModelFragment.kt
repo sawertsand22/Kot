@@ -29,7 +29,7 @@ import com.example.list_4pm2_2425.utils.SessionManager
 class CarModelFragment : Fragment(), MainActivity.Edit {
 
     companion object {
-        //fun newInstance() = FacultyFragment()
+
         private var INSTANCE: CarModelFragment? = null
         fun getInstance(): CarModelFragment {
             if (INSTANCE == null) INSTANCE = CarModelFragment()
@@ -39,8 +39,7 @@ class CarModelFragment : Fragment(), MainActivity.Edit {
 
     private lateinit var viewModel: CarModelViewModel
     private lateinit var _binding: FragmentCarmodelBinding
-    //val btnLoginRegister = requireActivity().findViewById<Button>(R.id.btnLoginRegister)
-    //val btnLogout = requireActivity().findViewById<Button>(R.id.btnLogout)
+
     private var tabPosition: Int = 0
 
 
@@ -50,7 +49,7 @@ class CarModelFragment : Fragment(), MainActivity.Edit {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)  // Говорим Android, что фрагмент имеет свое меню
+            setHasOptionsMenu(true)  // Говорим Android, что фрагмент имеет свое меню
     }
 
     private var isAuthorized = false//
@@ -89,15 +88,14 @@ class CarModelFragment : Fragment(), MainActivity.Edit {
         viewModel = ViewModelProvider(this).get(CarModelViewModel::class.java)
         activityCallbacks?.newTitle("Список моделей авто")
 
-        //btnLoginRegister = view.findViewById(R.id.btnLoginRegister)
-        //btnLogout = view.findViewById(R.id.btnLogout)
+
         val isAuthorized = isUserAuthorized()
 
 
 
 
 
-        //btnLoginRegister = view.findViewById(R.id.btnLoginRegister)
+
 
 
 
@@ -166,8 +164,7 @@ class CarModelFragment : Fragment(), MainActivity.Edit {
                             // Только просмотр
                             viewModel.setCurrentCarModel(carModel)
                         }
-                       // viewModel.setCurrentFaculty(faculty)
-                        //updateCurrentView(itemView)
+
                     }
 
                     val icl=itemView.findViewById<ConstraintLayout>(R.id.clCarModel)
@@ -260,7 +257,7 @@ class CarModelFragment : Fragment(), MainActivity.Edit {
 
         val isAuthorized = SessionManager.isUserAuthorized(requireContext())
 
-        // Обновляем UI
+
         updateUI(isAuthorized)
 
         // Обновляем меню

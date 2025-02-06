@@ -49,12 +49,7 @@ class RegisterFragment : Fragment() {
                 return@setOnClickListener
             }
 
-            // Сохранение состояния пользователя
-//            SessionManager.saveUserState(requireContext(), true)
-//            Toast.makeText(context, "Registration successful", Toast.LENGTH_SHORT).show()
-//
-//            // Переход на основной экран
-//            activity?.supportFragmentManager?.popBackStack()
+
             lifecycleScope.launch {
                 val userExists = repository.registerUser(email, password)
                 if (userExists) {

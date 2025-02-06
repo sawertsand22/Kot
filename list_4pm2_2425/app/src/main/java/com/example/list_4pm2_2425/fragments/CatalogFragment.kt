@@ -68,7 +68,7 @@ class CatalogFragment : Fragment(), MainActivity.Edit {
     private val sparePartsViewModel: SparePartsViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // Дополнительная настройка ViewModel может быть добавлена здесь
+
     }
 
     override fun onCreateView(
@@ -101,11 +101,7 @@ class CatalogFragment : Fragment(), MainActivity.Edit {
 
 
 
-        //btnLoginRegister = view.findViewById(R.id.btnLoginRegister)
-        //btnLogout = view.findViewById(R.id.btnLogout)
-        //val isAuthorized = isUserAuthorized()
-        //updBtn()
-        // Наблюдение за изменениями в списке групп
+
         viewModel.catalogList.observe(viewLifecycleOwner) { catalogList ->
             createUI(catalogList)
 
@@ -115,101 +111,17 @@ class CatalogFragment : Fragment(), MainActivity.Edit {
             }
 
         }
-//        val btnLogout: Button? = view.findViewById(R.id.btnLogout)
-//        btnLogout?.setOnClickListener {
-//            SessionManager.saveUserState(requireContext(), false)
-//            Toast.makeText(context, "Вы вышли из аккаунта", Toast.LENGTH_SHORT).show()
 //
-//            //logoutUser()
-//            updBtn()  // Обновление состояния кнопок после выхода
-//            // Переход к экрану входа
-//            activity?.supportFragmentManager?.beginTransaction()
-//                ?.replace(R.id.fcvMain, CatalogFragment())
-//                ?.commit()
-//        }
-
-
-
-
-
-
-
-
-//   ИЗ СПАРЕПАРТ ФРАГМЕНТ     viewModel.sparepartList.observe(viewLifecycleOwner) { spareparts ->
-//            Log.d("FragmentObserve", "SparePart list updated in fragment: ${spareparts.size}, first item: ${spareparts.firstOrNull()?.sparePartName}")
-//            sparePartAdapter.updateData(spareparts)  // Обновляем существующий адаптер
-//            binding.rvSpareParts.requestLayout()
-//        }
-
-
-
-
-        //btnLoginRegister = view.findViewById(R.id.btnLoginRegister)
-
-//        btnLoginRegister.setOnClickListener {
-//            // Открытие фрагмента регистрации
-//            val transaction = activity?.supportFragmentManager?.beginTransaction()
-//            transaction?.replace(R.id.fcvMain, RegisterFragment()) // Замена текущего фрагмента на RegisterFragment
-//            transaction?.addToBackStack(null)
-//            transaction?.commit()
-//
-//            updBtn()
-//        }
-        //openLoginRegisterFragment()
-
-           //binding.tlGroups.setOnLongClickListener {
-           // showSortDialog()
-          //  true
-       // }
         activityCallback?.newTitle(viewModel.carModel?.name ?: "")
 
 
 
     }
 
-   //private fun showSortDialog() {
-   //    val items = arrayOf("По имени", "По дате", "По другому атрибуту")
-   //    AlertDialog.Builder(requireContext())
-   //        .setTitle("Сортировать по:")
-   //        .setItems(items) { dialog, which ->
-   //            when (which) {
-   //                0 -> sortByName()
-   //                1 -> sortByDate()
-   //                2 -> sortByAnotherAttribute()
-   //            }
-   //        }
-   //        .show()
-   //}
-
-   // private fun sortByName() {
-   //     val sortedGroups = viewModel.groupList.value?.sortedBy { it.name } ?: emptyList()
-   //     createUI(sortedGroups)
-   // }
-//
-   // private fun sortByDate() {
-   //     // Предположим, что у вас есть поле date в классе Group
-   //     val sortedGroups = viewModel.groupList.value?.sortedBy { it.name } ?: emptyList()
-   //     createUI(sortedGroups)
-   // }
-//
-   // private fun sortByAnotherAttribute() {
-   //     // Реализуйте сортировку по другому атрибуту
-   //     val sortedGroups = viewModel.groupList.value?.sortedBy { it.facultyID } ?: emptyList()
-   //     createUI(sortedGroups)
-   // }
 
 
 
-    private fun updBtn()
-    {val isAuthorized = isUserAuthorized()
-        if (isAuthorized) {
-            btnLoginRegister.visibility = View.GONE
-            btnLogout.visibility = View.VISIBLE
-        } else {
-            btnLoginRegister.visibility = View.VISIBLE
-            btnLogout.visibility = View.GONE
-        }
-    }
+
 
 
     private fun isUserAuthorized(): Boolean {
@@ -218,28 +130,6 @@ class CatalogFragment : Fragment(), MainActivity.Edit {
     }
 
 
-    private fun openLoginRegisterFragment() {
-        val loginFragment = RegisterFragment()
-        activity?.supportFragmentManager?.beginTransaction()
-            ?.replace(R.id.fcvMain, loginFragment)
-            ?.addToBackStack(null)
-            ?.commit()
-    }
-
-    private fun logoutUser() {
-
-        val sharedPrefs = requireContext().getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
-        val editor = sharedPrefs.edit()
-        editor.putBoolean("isAuthorized", false)
-        editor.apply()
-
-        // Переход к экрану входа
-        activity?.supportFragmentManager?.beginTransaction()
-            ?.replace(R.id.fcvMain, LoginFragment())
-            ?.commit()
-
-        Toast.makeText(context, "Вы вышли из аккаунта", Toast.LENGTH_SHORT).show()
-    }
 
 
     private fun createUI(catalogList: List<Catalog>) {
@@ -282,12 +172,7 @@ class CatalogFragment : Fragment(), MainActivity.Edit {
         })
     }
 
-//    private fun searchGroups(query: String) {
-//        val filteredGroups = viewModel.catalogList.value?.filter {
-//            it.name.contains(query, ignoreCase = true)
-//        } ?: emptyList()
-//        createUI(filteredGroups)
-//    }
+
 
     private fun sortCatalogs() {
         val sortedCatalogs = viewModel.catalogList.value?.sortedBy { it.name } ?: emptyList()

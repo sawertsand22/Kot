@@ -13,13 +13,9 @@ class CarModelViewModel : ViewModel() {
     val carModel
         get()=_carModel
 
-//    private val facultyListObserver = Observer<ListOfFaculty?>{
-//            list ->
-//        facultyList.postValue(list)
-//    }
+
 
     init {
-  //      AppRepository.getInstance().listOfFaculty.observeForever(facultyListObserver)
         AppRepository.getInstance().carModel.observeForever {
             _carModel=it
         }

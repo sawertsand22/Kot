@@ -29,24 +29,7 @@ abstract class ListDatabase : RoomDatabase() {
             }
         }
 
-        // Исправлено название переменной: MIGRAION -> MIGRATION
-//        val MIGRATION_2_3 = object : Migration(1, 3) {
-//            override fun migrate(db: SupportSQLiteDatabase) {
-//                // Создаём новую таблицу
-//                db.execSQL("""
-//                    CREATE TABLE CarModel (
-//                        id INTEGER PRIMARY KEY NOT NULL,
-//                        carModel TEXT NOT NULL
-//                    )
-//                """.trimIndent())
-//
-//                // Переносим данные из старой таблицы
-//
-//
-//                // Удаляем старую таблицу
-//
-//            }
-//        }
+
 
         private fun buildDatabase(context: Context) = Room.databaseBuilder(
             context,
@@ -54,8 +37,6 @@ abstract class ListDatabase : RoomDatabase() {
             "list_database"
         )
             .fallbackToDestructiveMigration()
-
-            //.addMigrations(MIGRATION_2_3) // Теперь название правильно
             .build()
     }
 }

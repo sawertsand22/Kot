@@ -39,18 +39,6 @@ class MainActivity : AppCompatActivity(), ActivityCallbacks {
         checkUserState()
 
 
-//        supportFragmentManager.addOnBackStackChangedListener {
-//            // Обновляем кнопки авторизации при изменении back stack
-//            updateAuthButtons()
-//        }
-
-
-
-
-
-
-
-
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -100,35 +88,7 @@ class MainActivity : AppCompatActivity(), ActivityCallbacks {
 
     private val catalogViewModel: CatalogViewModel by viewModels()
 
-//    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-//        menuInflater.inflate(R.menu.main_menu, menu)
-//        _miAppendCarModel = menu?.findItem(R.id.miNewCarModel)
-//        _miUpdateCarModel = menu?.findItem(R.id.miUpdateCarModel)
-//        _miDeleteCarModel = menu?.findItem(R.id.miDeleteCarModel)
-//        _miAppendCatalog = menu?.findItem(R.id.miNewCatalog)
-//        _miUpdateCatalog = menu?.findItem(R.id.miUpdateCatalog)
-//        _miDeleteCatalog = menu?.findItem(R.id.miDeleteCatalog)
-//
-//
-//        val currentFragment = supportFragmentManager.findFragmentById(R.id.fcvMain)
-//
-//        val isCatalogOrCarModel = currentFragment is CatalogFragment || currentFragment is CarModelFragment
-//
-//        // Показываем меню только если это CatalogFragment или CarModelFragment
-//        menu?.setGroupVisible(0, isCatalogOrCarModel)
-//
-//        updateMenu(activeFragment)
-//        return true
-//    }
-//
-//    private fun updateMenu(fragmentType: NamesOfFragment){
-//        _miAppendCarModel?.isVisible = fragmentType==NamesOfFragment.CARMODEL
-//        _miUpdateCarModel?.isVisible = fragmentType==NamesOfFragment.CARMODEL
-//        _miDeleteCarModel?.isVisible = fragmentType==NamesOfFragment.CARMODEL
-//        _miAppendCatalog?.isVisible = fragmentType==NamesOfFragment.CATALOG
-//        _miUpdateCatalog?.isVisible = fragmentType==NamesOfFragment.CATALOG
-//        _miDeleteCatalog?.isVisible = fragmentType==NamesOfFragment.CATALOG
-//    }
+
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.main_menu, menu)
@@ -236,7 +196,7 @@ class MainActivity : AppCompatActivity(), ActivityCallbacks {
         btnLogin.visibility = if (isAuthorized) View.GONE else View.VISIBLE
         btnLogout.visibility = if (isAuthorized) View.VISIBLE else View.GONE
 
-        invalidateOptionsMenu() // 🔥 ОБНОВЛЯЕМ МЕНЮ ПОСЛЕ ИЗМЕНЕНИЙ
+        invalidateOptionsMenu() // ОБНОВЛЯЕМ МЕНЮ ПОСЛЕ ИЗМЕНЕНИЙ
     }
 
 
