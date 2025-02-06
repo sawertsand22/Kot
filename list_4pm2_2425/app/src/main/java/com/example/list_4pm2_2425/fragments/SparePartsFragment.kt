@@ -228,7 +228,7 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
                     updateCurrentView(itemView)
                 }
                 tv.setOnLongClickListener {
-                    viewModel.sortByName()
+                    viewModel.sortByPartName()
                     true
                 }
                 val tv2 = itemView.findViewById<TextView>(R.id.tvSparePartName2)
@@ -240,7 +240,7 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
                     updateCurrentView(itemView)
                 }
                 tv2.setOnLongClickListener {
-                    viewModel.sortByMiddleName()
+                    viewModel.sortByManufacturer()
                     true
                 }
                 val tv3 = itemView.findViewById<TextView>(R.id.tvSparePartName3)
@@ -252,7 +252,7 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
                     updateCurrentView(itemView)
                 }
                 tv3.setOnLongClickListener {
-                    viewModel.sortByLastName()
+                    viewModel.sortByNumberCatalog()
                     true
                 }
                 itemView.findViewById<ImageButton>(R.id.ibEditSparePart).setOnClickListener {
@@ -273,7 +273,7 @@ override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
                         ib.visibility = View.VISIBLE
                     }
                     MainScope().launch {
-                        tv.text = sparepart.manufacturer
+                        tv.text = sparepart.sparePartName
                         val lp = llb.layoutParams
                         lp?.width = 1
                         val ip = ib.layoutParams

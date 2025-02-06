@@ -1,6 +1,5 @@
 package com.example.list_4pm2_2425.app_view_models
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -8,7 +7,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.list_4pm2_2425.data.Catalog
 import com.example.list_4pm2_2425.data.Sparepart
 import com.example.list_4pm2_2425.repository.AppRepository
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -97,15 +95,15 @@ class SparePartsViewModel : ViewModel() {
     }
 
     //Сортировка
-    fun sortByName() {
+    fun sortByPartName() {
         _sparepartList.value = _sparepartList.value?.sortedBy { it.sparePartName }
     }
 
-    fun sortByMiddleName() {
+    fun sortByManufacturer() {
         _sparepartList.value = _sparepartList.value?.sortedBy { it.manufacturer }
     }
 
-    fun sortByLastName() {
+    fun sortByNumberCatalog() {
         _sparepartList.value = _sparepartList.value?.sortedBy { it.numberCatalog }
     }
 }
